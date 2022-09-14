@@ -1,0 +1,34 @@
+sequelize model:generate --name m_anggota --attributes no_anggota:string,nama:string,no_ktp:string,no_hp:string,gender:enum:'{pria,wanita}',tanggal_lahir:date,tempat_lahir:string,alamat:text,email:string,pekerjaan_id:integer,bank_id:integer,is_waiting:boolean,is_approve
+
+
+SELECT
+akun.id,
+akun.nama,
+SUM(
+    IF(tsk.jenis_transaksi_id=1,0,tsk.jumlah)
+) as total_penarikan,
+SUM(
+    IF(tsk.jenis_transaksi_id=2,0,tsk.jumlah)
+) as total_pengembalian,
+(
+    SUM(IF(tsk.jenis_transaksi_id=2,0,tsk.jumlah))
+    -
+	SUM(IF(tsk.jenis_transaksi_id=1,0,tsk.jumlah))
+) as total_transaksi,
+SUM(smpn.jumlah) as total_simpanan,
+(
+    SUM(smpn.jumlah) -
+(
+    SUM(IF(tsk.jenis_transaksi_id=2,0,tsk.jumlah))
+    -
+	SUM(IF(tsk.jenis_transaksi_id=1,0,tsk.jumlah))
+) 
+
+) as total_saldo
+
+FROM t_transaksi as tsk
+	JOIN m_anggota as akun
+    ON akun.id = tsk.anggota_id
+    LEFT JOIN t_simpan as smpn
+    ON akun.id = smpn.anggota_id
+GROUP BY tsk.anggota_id;

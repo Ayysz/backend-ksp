@@ -1,0 +1,12 @@
+// create https server
+const https = require('https');
+
+const server = https.createServer(app);
+
+server.listen(process.env.PORT);
+server.on('listening', onListening);
+
+function onListening() {
+    const addr = server.address();
+    console.log(`Listening on https://localhost:${addr.port}`);
+}
