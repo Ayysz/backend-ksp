@@ -13,8 +13,9 @@ module.exports = app => {
     process.env.PORT = cases[nodeENV];
     
     console.log(`=== on ${nodeENV} mode ===`);
+    console.log(`=== PORT ${process.env.PORT} ===`);
     nodeENV==='production'?
         app.use(helmet):
         '';
     app.use(logger('dev'));
-}
+};

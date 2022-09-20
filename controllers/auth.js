@@ -8,6 +8,8 @@ const Models = require('../models'); // require from index.js in models
 const user = Models.m_akun; // get model m_akun from Models
 const controller = {};
 
+const { errRes } = require('../helper/helper');
+const { sequelize } = require('../models');
 const expiration = process.env.JWT_EXPIRATION_TIME_MS;
 const secretKey = process.env.JWT_SECRET;
 const roleId = {
@@ -17,20 +19,20 @@ const roleId = {
     4: 'Member'
 };
 
-// global error respone with status code 400
-const errRes = (res, code, msg) => {
-    return res.status(code)
-        .json({
-            status: 'Error',
-            message: msg
-    });
-};
-
 // mencari data email
 const findOnly = async (param) => {
     const data = await user.findOne({
+        raw: true,
         where: param
-    })
+    });
+
+    return data;
+}
+
+const getAll = async () => {
+    const data = await User.findAll({
+        raw: true,
+    });
 
     return data;
 }
@@ -39,20 +41,19 @@ const findOnly = async (param) => {
 controller.checkUser = async (req, res, next) => {
     try {
         const { email, password } = req.body;
-        // const result = await user.findOne({
-        //     where: {
-        //         email: email.toLowerCase()
-        //     }
-        // });
 
         const result = await findOnly({email: email.toLowerCase()});
 
         // cek hasil apakah ada email sesuai dengan yang didatabase
         if (result !== null){
+            
             // cek apakah password sama
-            const verify = await bycrypt.compare(password, result.dataValues.password);
+            const verify = await bycrypt.compare(password, result.password);
+            
             if(verify){
-                console.log(result);
+
+                // console.log(result);
+
                 // membuat object User untuk menampung data yang berhasil ditemukan dari database
                 const User = {
                     email: result.email,
@@ -62,9 +63,11 @@ controller.checkUser = async (req, res, next) => {
                 // menyimpan data dari request body ke dalam data locals.user
                 res.locals.user = User;
                 next();
+                
             }else{
                 errRes(res, 400, 'Password Salah');
             }
+            
         }else{
             errRes(res, 400, 'Email Salah');
         }
@@ -111,7 +114,6 @@ controller.signUp = async (req, res, next) => {
     try {
         const {faker} = require('@faker-js/faker');
         const {email, password} = req.body;
-
         const reqData = {
             email,
             password,
@@ -125,9 +127,9 @@ controller.signUp = async (req, res, next) => {
             return errRes(res, 400, 'Email telah terdaftar, silahkan gunakan email lain');
         }else{
             const hasil = await user.create(reqData);
-            console.log(hasil);
+            // console.log(hasil);
             const newRecord = hasil._options.isNewRecord;
-            if(newRecord === true){
+            if(newRecord){
                 return res.status(201)
                 .json({
                     status: 'Success',
@@ -175,6 +177,29 @@ controller.protected = (req, res, next) => {
     }
 };
 
+// getAll data akun
+controller.getAll = async (req, res, next) => {
+    try {
+        const result = await getAll();
+
+        return !result ? 
+        res.status(200).json({
+            status: 'Success',
+            message: 'Data ditemukan',
+            data: result
+        }):
+        res.status(400).json({
+            status: 'Error',
+            message: 'Data kosong tidak ditemukan',
+            data: result
+        });
+        
+
+    } catch (e) {
+        next(e)
+    }
+}
+
 // khusus untuk admin
 controller.adminOnly = (req, res, next) => {
     
@@ -188,7 +213,6 @@ controller.adminOnly = (req, res, next) => {
         next();
     }
 }
-
 controller.haloAdmin = (req, res, next) => {
     const User = req.user.data;
     return res.status(200).json({
@@ -201,7 +225,7 @@ controller.haloAdmin = (req, res, next) => {
 controller.staffOnly = (req, res, next) => {
   try {
     const User = req.user.data;
-    if(roleId[User.role] !== 'Staff'){
+    if(roleId[User.role] === 'member'){
         return errRes(res, 401, 'Kamu bukan staff gaboleh masuk')
     }else{
         next()
@@ -210,7 +234,6 @@ controller.staffOnly = (req, res, next) => {
     next(e)
   }  
 };
-
 controller.haloStaff = (req, res ,next) => {
     const User = req.user.data;
     return res.status(200).json({
@@ -218,9 +241,44 @@ controller.haloStaff = (req, res ,next) => {
         message: 'Selamat datang staff',
         email: User.email
     });
-}
-
-module.exports = {
-    controller,
-    errRes
 };
+
+// member only
+controller.memberOnly = (req, res, next) => {
+    try {
+        const User = req.user.data;
+        if(parseInt(User.role) > 5){
+            return errRes(res, 401, 'Kamu siapa gak kedaftar di role')
+        }else{
+            next()
+        }
+    } catch (e) {
+        next(e)
+    }
+};
+
+// info account in cookies
+controller.info = (req, res, next) => {
+    try {
+        const {email, password, role} = req.user.data;
+
+        console.log('Info Akun kamu')
+        console.table(req.user.data);
+
+        return res.status(200)
+        .json({
+            status: 'Success',
+            message: 'Info akun kamu dari cookies',
+            data: {
+                email,
+                password,
+                role
+            }
+        })
+
+    } catch (e) {
+        next(e)
+    }
+};
+
+module.exports = {controller};

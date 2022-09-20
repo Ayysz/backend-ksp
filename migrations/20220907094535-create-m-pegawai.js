@@ -9,22 +9,27 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       no_pegawai: {
+        allowNull: false,
         type: Sequelize.STRING(13)
       },
       nama: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       no_hp: {
+        allowNull: false,
         type: Sequelize.STRING(13)
       },
       no_ktp: {
+        allowNull: false,
         type: Sequelize.STRING(16)
       },
       gender: {
         type: Sequelize.ENUM('pria', 'wanita')
       },
       tanggal_lahir: {
-        type: Sequelize.DATE
+        allowNull: false,
+        type: Sequelize.DATEONLY
       },
       tempat_lahir: {
         type: Sequelize.STRING
@@ -33,6 +38,7 @@ module.exports = {
         type: Sequelize.TEXT
       },
       email: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       jabatan_id: {

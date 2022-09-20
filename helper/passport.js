@@ -9,14 +9,18 @@ const secret = process.env.JWT_SECRET;
 
 // cek kadaluarsa jwt dan mengembalikan data payload
 const jwtVerify = (jwtPayload, done) => {
-    const { expiration } = jwtPayload;
+    try {
+        const { expiration } = jwtPayload;
 
-    // cek kadaluarsa jwt dari payload
-    if (Date.now() > expiration){
-        done('Unothorized', false)
+        // cek kadaluarsa jwt dari payload
+        if (Date.now() > expiration){
+            throw {statusCode: 401, message: 'Token expired please login again!'};
+        }
+        return done(null, jwtPayload);
+    } catch (error) {
+        done(error)
     }
-
-    done(null, jwtPayload);
+    
 };
 
 // extract cookie jika ada

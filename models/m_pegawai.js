@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      m_pegawai.hasOne(models.m_jabatan, {
+      m_pegawai.belongsTo(models.m_jabatan, {
         foreignKey: 'jabatan_id'
       });
     }
@@ -44,7 +44,7 @@ module.exports = (sequelize, DataTypes) => {
         notEmpty: true,
         notNull: true,
         len: {
-          msg: 'Masukan maksmial 13 digit angka',
+          msg: 'Masukan maksmial 13 digit angka nomor telepon',
           args: [1,13]
         }
       }
@@ -89,7 +89,6 @@ module.exports = (sequelize, DataTypes) => {
       references: {
         model: 'm_jabatan',
         key: 'id',
-        as: 'jabatan_id'
       }
     },
     is_active: DataTypes.BOOLEAN

@@ -17,7 +17,6 @@ module.exports = {
       references: {
         table: 'm_jabatan',
         field: 'id',
-        as: 'jabatan_id'
       },
       onUpdate: 'CASCADE',
       onDelete: 'CASCADE'
