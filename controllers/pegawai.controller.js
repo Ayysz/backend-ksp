@@ -10,6 +10,7 @@ const controller = {};
 // getAll data pegawai
 controller.getAll = async (req, res, next) => {
     try {
+
         const page = parseInt(req.query.page) || 0;
         const limit = parseInt(req.query.limit) || 10;
         const search = req.query.search || "";
@@ -140,11 +141,6 @@ controller.edit = async (req, res, next) => {
             email: req.user.data.email,
             jabatan_id: req.body.jabatan_id || 1,
         };   
-
-        /* 
-        bang bang operator !!
-         will give result to boolean 
-         */
         const [updatedRows] = await pegawai.update(reqData,{
             where:{id},
             validate: true,
@@ -168,6 +164,11 @@ controller.destroy = async (req, res, next) => {
     try {
         const {id} = req.params;
 
+        /**
+         * bang bang operator !! 
+         * will give result to boolean 
+         * */ 
+
         const result = !!await pegawai.destroy({where: {id}});
         
         if(result) 
@@ -179,7 +180,7 @@ controller.destroy = async (req, res, next) => {
         // throw new error
         throw {
                 statusCode: 400, 
-                message: 'Gagal update data pegawai'
+                message: 'Gagal delete data pegawai'
             };
 
     } catch (e) {

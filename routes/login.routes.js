@@ -4,10 +4,10 @@ const controller = require('../controllers');
 const router = require('express').Router();
 const passport = require('passport');
 
-const { adminOnly, haloAdmin, staffOnly, haloStaff, memberOnly }  = controller.auth; 
+const { adminOnly, haloAdmin, staffOnly, leaderOnly, haloStaff, memberOnly }  = controller.auth; 
 const Authorization = {
     adminOnly,
-    // leaderOnly,
+    leaderOnly,
     staffOnly,
     memberOnly,
 }
@@ -17,7 +17,7 @@ router.post('/signup', controller.auth.signUp);
 router.post('/login', controller.auth.checkUser ,controller.auth.login);
 
 // Authorization
-router.get('/userInfo', authenticate, Authorization.memberOnly, controller.auth.info);
+router.get('/userInfo', authenticate, Authorization.staffOnly, controller.auth.info);
 router.get('/protected', authenticate, controller.auth.protected );
 router.get('/haloadmin', authenticate, Authorization.adminOnly, haloAdmin);
 router.get('/halostaff', authenticate, Authorization.staffOnly, haloStaff);

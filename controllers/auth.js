@@ -208,7 +208,7 @@ controller.adminOnly = (req, res, next) => {
     if(roleId[User.role] !== 'Admin') {
         return errRes(res, 401, 'Access denied your role is enough to acces this routes');
     }else{
-        console.log('lanjutttt======');
+        console.log('lanjutttt khusus admin======');
         // jika role mencukupi maka lanjut
         next();
     }
@@ -220,6 +220,15 @@ controller.haloAdmin = (req, res, next) => {
             message: `Selamat datang admin ${User.email}` 
         })
 }
+
+// khusus untuk pimpinan
+controller.leaderOnly = (req, res, next) => {
+    const User = req.user.data;
+    return User.role > 2 ?
+        errRes(res, 401, 'Kamu cuman staff biasa gaboleh masuk, ini khusus pimpinan') :
+        next();
+    
+};
 
 // khusus untuk staff
 controller.staffOnly = (req, res, next) => {
@@ -247,7 +256,7 @@ controller.haloStaff = (req, res ,next) => {
 controller.memberOnly = (req, res, next) => {
     try {
         const User = req.user.data;
-        if(parseInt(User.role) > 5){
+        if(!roleId[User.role]){
             return errRes(res, 401, 'Kamu siapa gak kedaftar di role')
         }else{
             next()
@@ -256,6 +265,14 @@ controller.memberOnly = (req, res, next) => {
         next(e)
     }
 };
+controller.haloMember = (req, res, next) => {
+    const User = req.user.data;
+    return res.status(200).json({
+        status: 'success',
+        message: 'Selamat datang member',
+        email: User.email
+    });
+}
 
 // info account in cookies
 controller.info = (req, res, next) => {
