@@ -26,7 +26,7 @@ module.exports = (sequelize, DataTypes) => {
         isUUID: 4
       }
     },
-    tanggal_simpan: DataTypes.DATE,
+    tanggal_simpan: DataTypes.DATEONLY,
     anggota_id: DataTypes.INTEGER,
     jumlah: DataTypes.DOUBLE,
     jenis_simpanan_id: {

@@ -33,9 +33,6 @@ module.exports = {
         email: email[i],
         pekerjaan_id: faker.helpers.arrayElement([1,2,3]),
         bank_id: faker.helpers.arrayElement([1,2,3]),
-        is_waiting: 1,
-        is_approve: 0,
-        is_active: 1,
         createdAt: new Date(),
         updatedAt: new Date()
       }

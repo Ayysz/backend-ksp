@@ -28,14 +28,18 @@ module.exports = {
        const reqData = {
          email: email[i],
          password: faker.internet.password(),
-         role_id: faker.helpers.arrayElement([1,2,3,4]),
-         is_active: 1,
-         createdAt: new Date(),
-         updatedAt: new Date()
+         role_id: faker.helpers.arrayElement([1,2,3,4])
        }
        data.push(reqData);
      }
-     
+    
+    //  membuat akun untuk test
+    await m_akun.create({
+      email: "adamGrahamBell@gmail.com",
+      password: "13102004",
+      role_id: 1
+    });
+
      return await m_akun.bulkCreate(data, {});
     // await queryInterface.bulkInsert('m_akun', data, {});
   },

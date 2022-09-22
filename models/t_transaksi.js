@@ -53,7 +53,7 @@ module.exports = (sequelize, DataTypes) => {
         key: 'id'
       }
     },
-    tanggal_transaksi: DataTypes.DATE,
+    tanggal_transaksi: DataTypes.DATEONLY,
     jumlah: DataTypes.DOUBLE,
     is_active: DataTypes.BOOLEAN,
     created_by: DataTypes.STRING,

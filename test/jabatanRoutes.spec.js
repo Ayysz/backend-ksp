@@ -6,12 +6,14 @@ const { faker } = require('@faker-js/faker');
 const req = request.agent(server);
 
 describe('Jabatan routes API test', () => {
-
+    
     const login = {
         email: "adamGrahamBell@gmail.com",
         password: "13102004",
     };
 
+    const id = 4;
+    
     // sebelum memulai setiap test
     beforeAll(async() => {
         await req
@@ -38,8 +40,7 @@ describe('Jabatan routes API test', () => {
         expect(res.body).toMatchObject({status: 'Success'})
     }),
 
-    it('Edit data jabatan ', async () => {
-        const id = 12;
+    it(`Edit data jabatan dengan id ${id}`, async () => {
         const data = {
             jabatan: faker.name.jobTitle(),
             desc: faker.lorem.sentence(7),
@@ -49,8 +50,7 @@ describe('Jabatan routes API test', () => {
         expect(res.body).toMatchObject({status: 'Success'})
     }),
 
-    it('delete data jabatan', async () => {
-        const id = 12;
+    it(`delete data jabatan dengan id ${id}`, async () => {
         const res = await req.delete(`/api/v1/jabatan/${id}`);
         expect(res.statusCode).toEqual(200)
         expect(res.body).toMatchObject({status: 'Success'});

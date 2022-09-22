@@ -17,8 +17,9 @@ router.post('/signup', controller.auth.signUp);
 router.post('/login', controller.auth.checkUser ,controller.auth.login);
 
 // Authorization
-router.get('/userInfo', authenticate, Authorization.staffOnly, controller.auth.info);
-router.get('/protected', authenticate, controller.auth.protected );
+router.get('/userInfo', authenticate, Authorization.memberOnly, controller.auth.info);
+router.get('/userData', authenticate, Authorization.adminOnly, controller.auth.getAll);
+router.get('/protected', authenticate, controller.auth.protected);
 router.get('/haloadmin', authenticate, Authorization.adminOnly, haloAdmin);
 router.get('/halostaff', authenticate, Authorization.staffOnly, haloStaff);
 router.get('/users_data', authenticate, Authorization.adminOnly, controller.auth.getAll);

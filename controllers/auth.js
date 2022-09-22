@@ -2,6 +2,7 @@
 
 require('dotenv').config();
 const bycrypt = require('bcryptjs');
+const {Op} = require('sequelize');
 const jwt = require('jsonwebtoken');
 const config = require('../config/config');
 const Models = require('../models'); // require from index.js in models
@@ -24,14 +25,6 @@ const findOnly = async (param) => {
     const data = await user.findOne({
         raw: true,
         where: param
-    });
-
-    return data;
-}
-
-const getAll = async () => {
-    const data = await User.findAll({
-        raw: true,
     });
 
     return data;
@@ -113,12 +106,11 @@ controller.login = async (req, res) => {
 controller.signUp = async (req, res, next) => {
     try {
         const {faker} = require('@faker-js/faker');
-        const {email, password} = req.body;
+        const {email, password, role_id} = req.body;
         const reqData = {
             email,
             password,
-            role_id: faker.helpers.arrayElement([1,2,3,4]),
-            is_active: 1
+            role_id,
         };
 
         // cek apakah email sudah terdaftar
@@ -180,19 +172,47 @@ controller.protected = (req, res, next) => {
 // getAll data akun
 controller.getAll = async (req, res, next) => {
     try {
-        const result = await getAll();
 
-        return !result ? 
-        res.status(200).json({
-            status: 'Success',
-            message: 'Data ditemukan',
-            data: result
-        }):
-        res.status(400).json({
-            status: 'Error',
-            message: 'Data kosong tidak ditemukan',
-            data: result
-        });
+        const page = parseInt(req.query.page) || 0;
+        const limit = parseInt(req.query.limit) || 10;
+        const search = req.query.search || '';
+        const offset = limit * page;
+
+        const config1 = {
+            where: {
+                [Op.or]: [
+                    {id: {[Op.like]: `%${search}%`}},
+                    {email: {[Op.like]: `%${search}%`}},
+                    {role_id: {[Op.like]: `%${search}%`}},
+                ]
+            }
+        }
+        const config2 = {
+            ...config1,
+            offset,
+            limit,
+            order: [ ['id', 'ASC'] ],
+            raw: true,
+        }
+
+        const totalRows = await user.count(config1);
+        const totalPage = Math.ceil(totalRows / limit);
+
+        const result = await user.findAll(config2);
+
+        if(!result){
+            throw {statusCode: 400, message: 'Data jabatan tidak ditemukan'}
+        }
+        return res.status(200)
+            .json({
+                status: 'Success',
+                message:'Data jabatan ditemukan',
+                page,
+                limit,
+                totalRows,
+                totalPage,
+                data: result
+            })
         
 
     } catch (e) {
@@ -204,7 +224,6 @@ controller.getAll = async (req, res, next) => {
 controller.adminOnly = (req, res, next) => {
     
     const User = req.user.data;
-    console.log(User.role < 4);
     if(roleId[User.role] !== 'Admin') {
         return errRes(res, 401, 'Access denied your role is enough to acces this routes');
     }else{
@@ -234,7 +253,7 @@ controller.leaderOnly = (req, res, next) => {
 controller.staffOnly = (req, res, next) => {
   try {
     const User = req.user.data;
-    if(roleId[User.role] === 'member'){
+    if(User.role > 3){
         return errRes(res, 401, 'Kamu bukan staff gaboleh masuk')
     }else{
         next()
@@ -297,5 +316,6 @@ controller.info = (req, res, next) => {
         next(e)
     }
 };
+
 
 module.exports = {controller};

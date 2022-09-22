@@ -1,7 +1,5 @@
 'use strict';
 
-const { query } = require("express");
-
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('m_akun', {
@@ -20,10 +18,11 @@ module.exports = {
         type: Sequelize.STRING
       },
       role_id: {
-        type: Sequelize.INTEGER,
         defaultValue: 4,
+        type: Sequelize.INTEGER,
       },
       is_active: {
+        defaultValue: 1,
         type: Sequelize.BOOLEAN
       },
       createdAt: {

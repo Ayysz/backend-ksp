@@ -21,12 +21,13 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       tanggal_transaksi: {
-        type: Sequelize.DATE
+        type: Sequelize.DATEONLY,
       },
       jumlah: {
         type: Sequelize.DOUBLE
       },
       is_active: {
+        defaultValue: 1,
         type: Sequelize.BOOLEAN
       },
       createdAt: {

@@ -11,10 +11,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      m_anggota.hasOne(models.m_bank, {
+      m_anggota.belongsTo(models.m_bank, {
         foreignKey: 'bank_id'
       });
-      m_anggota.hasOne(models.m_pekerjaan, {
+      m_anggota.belongsTo(models.m_pekerjaan, {
         foreignKey: 'pekerjaan_id'
       });
       m_anggota.hasMany(models.t_transaksi, {
@@ -23,7 +23,8 @@ module.exports = (sequelize, DataTypes) => {
       
       m_anggota.hasMany(models.t_simpan, {
         foreignKey: 'anggota_id'
-      })
+      });
+      
     }
   }
   m_anggota.init({
@@ -73,7 +74,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     gender: DataTypes.ENUM('pria', 'wanita'),
     tanggal_lahir: {
-      type: DataTypes.DATE,
+      type: DataTypes.DATEONLY,
       allowNull: false,
       validate: {
         isDate: true,
@@ -116,5 +117,6 @@ module.exports = (sequelize, DataTypes) => {
     modelName: 'm_anggota',
     freezeTableName: true,
   });
+  
   return m_anggota;
 };

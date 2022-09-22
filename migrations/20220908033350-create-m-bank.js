@@ -23,6 +23,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       is_active: {
+        defaultValue: 1,
         type: Sequelize.BOOLEAN
       },
       createdAt: {

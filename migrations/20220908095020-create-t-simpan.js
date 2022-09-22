@@ -12,7 +12,7 @@ module.exports = {
         type: Sequelize.UUID
       },
       tanggal_simpan: {
-        type: Sequelize.DATE
+        type: Sequelize.DATEONLY
       },
       anggota_id: {
         type: Sequelize.INTEGER
@@ -24,6 +24,7 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       is_active: {
+        defaultValue: 1,
         type: Sequelize.BOOLEAN
       },
       createdAt: {

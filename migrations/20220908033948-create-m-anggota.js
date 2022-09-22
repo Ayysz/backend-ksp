@@ -28,7 +28,7 @@ module.exports = {
       },
       tanggal_lahir: {
         allowNull: false,
-        type: Sequelize.DATE,
+        type: Sequelize.DATEONLY,
       },
       tempat_lahir: {
         type: Sequelize.STRING

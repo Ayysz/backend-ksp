@@ -45,6 +45,7 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       is_active: {
+        defaultValue: 1,
         type: Sequelize.BOOLEAN
       },
       createdAt: {

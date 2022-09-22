@@ -21,12 +21,13 @@ module.exports = {
         type: Sequelize.TEXT
       },
       tanggal_pinjam: {
-        type: Sequelize.DATE
+        type: Sequelize.DATEONLY,
       },
       tanggal_pengembalian: {
-        type: Sequelize.DATE
+        type: Sequelize.DATEONLY,
       },
       is_active: {
+        defaultValue: 1,
         type: Sequelize.BOOLEAN
       },
       createdAt: {

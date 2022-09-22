@@ -35,7 +35,7 @@ module.exports = (sequelize, DataTypes) => {
         key: 'id'
       }
     },
-    tanggal_persetujuan: DataTypes.DATE,
+    tanggal_persetujuan: DataTypes.DATEONLY,
     alasan: DataTypes.TEXT,
     is_waiting: DataTypes.BOOLEAN,
     is_approve: DataTypes.BOOLEAN,

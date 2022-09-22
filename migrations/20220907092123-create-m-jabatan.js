@@ -15,6 +15,7 @@ module.exports = {
         type: Sequelize.TEXT
       },
       is_active: {
+        defaultValue: 1,
         type: Sequelize.BOOLEAN
       },
       createdAt: {

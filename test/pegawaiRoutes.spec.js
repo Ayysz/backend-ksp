@@ -13,6 +13,8 @@ describe('Pegawai routes API test', () => {
         password: "13102004",
     };
 
+    const id = 3;
+
     // sebelum memulai setiap test
     beforeAll(async() => {
         await req
@@ -48,16 +50,8 @@ describe('Pegawai routes API test', () => {
         expect(res.body).toMatchObject({status: 'Success'})
         expect(res.body).toHaveProperty('data')
     }),
-
-    it('Mengahapus data pegawai', async() => {
-        const id = 15;
-        const res = await req.delete(`/api/v1/pegawai/${id}`);
-        expect(res.statusCode).toEqual(400); 
-        // expect(res.statusCode).toEqual(200);
-    }),
-
+    
     it('mengedit data pegawai', async() => {
-        const id = 13;
         const data = {
             no_pegawai: faker.random.numeric(13),
             nama: faker.name.firstName(),
@@ -73,7 +67,13 @@ describe('Pegawai routes API test', () => {
 
         const res = await req.put(`/api/v1/pegawai/${id}`).send(data)
         expect(res.statusCode).toEqual(200)
-    })
+    }),
+
+    it('Mengahapus data pegawai', async() => {
+        const res = await req.delete(`/api/v1/pegawai/${id}`);
+        // expect(res.statusCode).toEqual(400); 
+        expect(res.statusCode).toEqual(200);
+    }),
     
 
     // close server when test complete

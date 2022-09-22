@@ -18,18 +18,21 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       tanggal_persetujuan: {
-        type: Sequelize.DATE
+        type: Sequelize.DATEONLY
       },
       alasan: {
         type: Sequelize.TEXT
       },
       is_waiting: {
+        defaultValue: 1,
         type: Sequelize.BOOLEAN
       },
       is_approve: {
+        defaultValue: 0,
         type: Sequelize.BOOLEAN
       },
       is_active: {
+        defaultValue: 1,
         type: Sequelize.BOOLEAN
       },
       createdAt: {

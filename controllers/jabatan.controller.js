@@ -1,3 +1,5 @@
+'use strict'
+
 const { Op } = require('sequelize');
 const Models = require('../models/index');
 const jabatan = Models.m_jabatan;
@@ -16,8 +18,8 @@ controller.getAll = async (req, res, next) => {
         const config1 = {
             where: {
                 [Op.or]: [
-                    {id: {[Op.like]: `%${search}`}},
-                    {jabatan: {[Op.like]: `%${search}`}},
+                    {id: {[Op.like]: `%${search}%`}},
+                    {jabatan: {[Op.like]: `%${search}%`}},
                 ]
             }
         }

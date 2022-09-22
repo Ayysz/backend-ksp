@@ -61,6 +61,7 @@ module.exports = (sequelize, DataTypes) => {
     freezeTableName: true,
   });
 
+  // hanya untuk seeder
   m_akun.beforeBulkCreate(async (m_akuns, options) => {
     for(const m_akun of m_akuns){
       const {
@@ -73,13 +74,12 @@ module.exports = (sequelize, DataTypes) => {
   
   // hash password before create
   m_akun.beforeCreate (async (m_akun, options) => {
-      const { password } = m_akun;
+      const { password, email } = m_akun;
       const hashed = await bycrypt.hash(password, 10);
-      return m_akun.password = hashed;
+      const lower = email.toLowerCase();
+      return m_akun.password = hashed, m_akun.email = lower;
   });
 
-  // lowercase email before create
-  // m_akun.beforeCreate()
 
   return m_akun;
 };

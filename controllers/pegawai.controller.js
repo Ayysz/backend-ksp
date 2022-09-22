@@ -88,7 +88,6 @@ controller.post = async (req, res, next) => {
             tanggal_lahir,
             tempat_lahir,
             alamat,
-            email,
             jabatan_id
         } = req.body;
 
@@ -101,9 +100,8 @@ controller.post = async (req, res, next) => {
             tanggal_lahir,
             tempat_lahir,
             alamat,
-            email: email || emailUser,
+            email: emailUser,
             jabatan_id: jabatan_id || 1,
-            is_active: 1,
         };
 
         const result = await pegawai.create(reqData);
@@ -115,6 +113,7 @@ controller.post = async (req, res, next) => {
                         data: result.dataValues
                     })
         }
+        throw {statusCode: 400, message: 'Gagal menambah data pegawai baru'}
 
     } catch (e) {
         next(e)
@@ -138,12 +137,10 @@ controller.edit = async (req, res, next) => {
             tanggal_lahir: req.body.tanggal_lahir,
             tempat_lahir: req.body.tempat_lahir,
             alamat: req.body.alamat,
-            email: req.user.data.email,
             jabatan_id: req.body.jabatan_id || 1,
         };   
         const [updatedRows] = await pegawai.update(reqData,{
             where:{id},
-            validate: true,
         })
 
         if(updatedRows){
