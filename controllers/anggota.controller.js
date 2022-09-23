@@ -67,6 +67,7 @@ controller.getAll = async (req, res, next) => {
                     model: bank,
                     include: {
                         model: namaBank,
+                        as: 'namaBank'
                     },
                     required: true,
                 },
@@ -167,7 +168,7 @@ controller.edit = async (req, res, next) => {
         // console.log(old);
         // console.log(updatedRows);
         if(!updatedRows){
-            throw {statusCode: 400, message:'Data gagal di update'}
+            throw {statusCode: 400, message:'Data gagal di update, masukan id yang sesuai'}
         }
         return res.status(200)
             .json({

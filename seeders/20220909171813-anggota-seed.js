@@ -31,15 +31,15 @@ module.exports = {
         tempat_lahir: faker.address.city(),
         alamat: faker.address.streetAddress(false),
         email: email[i],
-        pekerjaan_id: faker.helpers.arrayElement([1,2,3]),
-        bank_id: faker.helpers.arrayElement([1,2,3]),
+        pekerjaan_id: faker.helpers.arrayElement([1,2]),
+        bank_id: faker.helpers.arrayElement([1,2]),
         createdAt: new Date(),
         updatedAt: new Date()
       }
       data.push(reqData);
     };
     
-    await queryInterface.bulkInsert('m_anggota', data, {});
+    return await queryInterface.bulkInsert('m_anggota', data, {});
   },
 
   async down (queryInterface, Sequelize) {

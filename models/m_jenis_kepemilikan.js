@@ -12,7 +12,8 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       m_jenis_kepemilikan.hasOne(models.m_bank, {
-        foreignKey: 'jenis_kepemilikan_id'
+        foreignKey: 'jenis_kepemilikan_id',
+        as: 'jenisKepemilikan'
       });
     }
   }

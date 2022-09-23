@@ -12,10 +12,12 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       m_bank.belongsTo(models.m_nama_bank, {
-        foreignKey: 'nama_bank_id'
+        foreignKey: 'nama_bank_id',
+        as: 'namaBank'
       })
       m_bank.belongsTo(models.m_jenis_kepemilikan, {
-        foreignKey: 'jenis_kepemilikan_id'
+        foreignKey: 'jenis_kepemilikan_id',
+        as: 'jenisKepemilikan'
       })
       m_bank.hasOne(models.m_anggota, {
         foreignKey: 'bank_id'
@@ -29,6 +31,7 @@ module.exports = (sequelize, DataTypes) => {
       references: {
         model: 'm_nama_bank',
         key: 'id',
+        as: 'namaBank'
       },
       validate: {
         notEmpty: true,
@@ -49,6 +52,7 @@ module.exports = (sequelize, DataTypes) => {
       references: {
         model: 'm_jenis_kepemilikan',
         key: 'id',
+        as: 'jenisKepemilikan',
       },
       validate: {
         notEmpty: true,

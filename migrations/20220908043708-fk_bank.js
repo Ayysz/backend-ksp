@@ -18,6 +18,7 @@ module.exports = {
       references: {
         table: 'm_jenis_kepemilikan',
         field: 'id',
+        as: 'jenisKepemilikan'
       },
       onUpdate: 'CASCADE',
       onDelete: 'CASCADE'
@@ -30,7 +31,8 @@ module.exports = {
       name: 'FK_nama_bank_id',
       references: {
         table: 'm_nama_bank',
-        field: 'id'
+        field: 'id',
+        as: 'namaBank'
       },
       onUpdate: 'CASCADE',
       onDelete: 'CASCADE'
