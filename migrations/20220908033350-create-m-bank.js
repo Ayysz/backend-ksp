@@ -9,7 +9,6 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       nama_bank_id: {
-        allowNull: false,
         type: Sequelize.INTEGER,
       },
       nama_pemilik_bank: {

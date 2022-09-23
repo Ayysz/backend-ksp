@@ -27,7 +27,6 @@ module.exports = (sequelize, DataTypes) => {
   m_bank.init({
     nama_bank_id: {
       type: DataTypes.INTEGER,
-      allowNull: false,
       references: {
         model: 'm_nama_bank',
         key: 'id',
@@ -35,7 +34,6 @@ module.exports = (sequelize, DataTypes) => {
       },
       validate: {
         notEmpty: true,
-        notNull: true,
         isInt: true
       }
     },

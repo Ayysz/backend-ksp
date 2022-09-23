@@ -6,11 +6,11 @@ const {authenticate ,Authorization} = require('./login.routes');
 
 router.route('/')
         .get(controller.namaBank.getAll)
-        .post(authenticate, Authorization.staffOnly, controller.namaBank.post);
+        .post(authenticate, Authorization.leaderOnly, controller.namaBank.post);
 
 router.route('/:id')
-        .put(authenticate, Authorization.staffOnly, controller.namaBank.edit)
-        .delete(authenticate, Authorization.staffOnly, controller.namaBank.destroy);
+        .put(authenticate, Authorization.leaderOnly, controller.namaBank.edit)
+        .delete(authenticate, Authorization.leaderOnly, controller.namaBank.destroy);
 
 router.use('/namaBank', router);
 

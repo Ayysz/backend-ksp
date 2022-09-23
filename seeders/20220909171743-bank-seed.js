@@ -14,7 +14,7 @@ module.exports = {
     */
     
     const data = [];
-    for(let i = 0;i<3;i++){
+    for(let i = 0;i<4;i++){
       const reqData = {
         nama_bank_id: faker.helpers.arrayElement([1,2,3]),
         nama_pemilik_bank: faker.name.firstName(),

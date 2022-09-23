@@ -15,7 +15,7 @@ describe('NamaBank routes API test', () => {
     const namaBank = [
         "BISA",
         "Berdiri",
-        "Jago"
+        "jago"
     ];
 
     const setData = () => {

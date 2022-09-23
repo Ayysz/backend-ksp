@@ -31,6 +31,11 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'm_nama_bank',
     freezeTableName: true,
+    hooks: {
+      beforeCreate: data => {
+        data.nama_bank.toUpperCase()
+      }
+    }
   });
   return m_nama_bank;
 };

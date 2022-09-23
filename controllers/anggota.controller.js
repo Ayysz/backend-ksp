@@ -34,12 +34,12 @@ controller.getAll = async (req, res, next) => {
         const page = parseInt(req.query.page) || 0;
         const limit = parseInt(req.query.limit) || 10;
         const search = req.query.search || '';
+        // const active = 
         const offset = page * limit;
 
         const config1 = {
             where: {
                 [Op.or]: [
-                    {id: {[Op.like]: `%${search}%`}},
                     {no_anggota: {[Op.like]: `%${search}%`}},
                     {nama: {[Op.like]: `%${search}%`}},
                 ]

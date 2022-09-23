@@ -1,5 +1,7 @@
 'use strict';
 const {faker}  = require('@faker-js/faker');
+const Models = require('../models');
+const m_pekerjaan = Models.m_pekerjaan;
 
 module.exports = {
   async up (queryInterface, Sequelize) {
@@ -23,6 +25,12 @@ module.exports = {
       };
       data.push(reqData);
     }
+
+    // dummy data
+    await m_pekerjaan.create({
+      pekerjaan: 'project manager',
+      desc: 'Who handle all project in company'
+    });
 
     await queryInterface.bulkInsert('m_pekerjaan', data, {});
   },

@@ -31,9 +31,6 @@ describe('Bank routes API test', () => {
         setData()
     });
 
-    
-    
-
     it('Getall data bank ', async () => {
         const res = await req.get('/api/v1/bank');
         expect(res.statusCode).toEqual(200);

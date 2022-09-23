@@ -21,7 +21,7 @@ module.exports = {
         as: 'jenisKepemilikan'
       },
       onUpdate: 'CASCADE',
-      onDelete: 'CASCADE'
+      onDelete: 'SET NULL'
     });
 
     // add foreign key column nama_bank_id table m_bank
@@ -35,7 +35,7 @@ module.exports = {
         as: 'namaBank'
       },
       onUpdate: 'CASCADE',
-      onDelete: 'CASCADE'
+      onDelete: 'SET NULL'
     });
   },
 

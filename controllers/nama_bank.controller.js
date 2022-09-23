@@ -56,9 +56,13 @@ controller.getAll = async (req, res, next) => {
 controller.post = async (req, res, next) => {
     try {
         
-        const result = await namaBank.create({
-            nama_bank: req.body.nama_bank
-        });
+        const {nama_bank} = req.body;
+
+        const check = await namaBank.findOne({where: {nama_bank: nama_bank.toLowerCase()}});
+
+        if(check) throw {statusCode: 400, message: 'namaBank sudah ada terdaftar'};
+
+        const result = await namaBank.create({nama_bank});
 
         if(result._options.isNewRecord){
             return res.status(201)
@@ -87,6 +91,7 @@ controller.edit = async (req, res, next) => {
             nama_bank: req.body.nama_bank
         }, {where: {id}});
 
+        console.log(updatedRows);
         if(!updatedRows) throw {statusCode: 400, message: 'Data gagal diupdate'}
         return res.status(200).json({
             status: 'Success',
