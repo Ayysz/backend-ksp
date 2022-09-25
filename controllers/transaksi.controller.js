@@ -78,11 +78,11 @@ controller.post = async (req, res, next) => {
         // get data for post
         const email = req.user.data.email;
         const data = await anggota.findOne({where:{email}});
-        console.log(data.dataValues)
+        console.log(data)
         const User = data.dataValues.nama; 
         const reqData = {
             no_transaksi: faker.datatype.uuid(),
-            anggota_id: parseInt(data.dataValues.anggota_id),
+            anggota_id: parseInt(data.dataValues.id),
             jenis_transaksi_id: parseInt(req.body.jenis_transaksi_id),
             bank_id: parseInt(req.body.bank_id),
             tanggal_transaksi: d.toLocaleDateString('en-CA'),
@@ -93,7 +93,7 @@ controller.post = async (req, res, next) => {
         const photo = {
             file_name: req.file.filename,
             refrence_table: 'Transaksi',
-            refrence_id: reqData.no_transaksi,
+            refrence_id: 1,
             anggota_id: reqData.anggota_id
         }
 
