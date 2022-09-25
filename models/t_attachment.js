@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   t_attachment.init({
-    file_name: DataTypes.STRING,
+    file_name: DataTypes.TEXT,
     refrence_table: {
       type: DataTypes.ENUM('transaksi','pinjam','simpan')
     },

@@ -7,14 +7,13 @@ const cookieParser = require('cookie-parser');
 const configure = require('./helper/configure');
 const config = require('./config/config');
 const passport = require('passport');
+const cors = require('cors');
 
 const app = express();
 
-const middlewareStackPrinter = require('middleware-stack-printer');
-// app.use(middlewareStackPrinter(true));
-
+app.use(cors());
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieParser(config.jwt.cookie));
 app.use(passport.initialize()); //inisialasi paspport js untuk auth
 configure(app);
@@ -25,6 +24,7 @@ require('./helper/passport');
 // load routes 
 const routes = require('./routes');
 app.use('/api/v1', routes);
+app.use('/src', express.static('src'));
 
 // Error handling
 app.use((err, req, res, next) => {
@@ -42,6 +42,7 @@ app.use((err, req, res, next) => {
 
 // create https server (on Pending cause difficult) so instead https i use http
 const http = require('http');
+const path = require('path');
 
 const server = http.createServer(app);
 

@@ -33,7 +33,7 @@ module.exports = (sequelize, DataTypes) => {
     freezeTableName: true,
     hooks: {
       beforeCreate: data => {
-        data.nama_bank.toUpperCase()
+        return data.nama_bank = data.nama_bank.toUpperCase()
       }
     }
   });

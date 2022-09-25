@@ -9,7 +9,7 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       file_name: {
-        type: Sequelize.STRING
+        type: Sequelize.TEXT
       },
       refrence_table: {
         type: Sequelize.ENUM('transaksi','pinjam','simpan')

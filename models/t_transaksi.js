@@ -15,7 +15,8 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'jenis_transaksi_id'
       });
       t_transaksi.belongsTo(models.m_anggota, {
-        foreignKey: 'anggota_id'
+        foreignKey: 'anggota_id',
+        as: 'anggota'
       })
       t_transaksi.belongsTo(models.m_bank, {
         foreignKey: 'bank_id'

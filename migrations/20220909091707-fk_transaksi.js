@@ -42,7 +42,8 @@ module.exports = {
       name: 'FK_anggota_id_transaksi',
       references: {
         table: 'm_anggota',
-        field: 'id'
+        field: 'id',
+        as: 'anggota'
       },
       onUpdate: 'CASCADE',
       onDelete: 'CASCADE'

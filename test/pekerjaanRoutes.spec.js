@@ -56,7 +56,7 @@ describe('Pekerjaan routes API test', () => {
     it('Create data pekerjaan error cause duplicate', async () => {
         const res = await req.post('/api/v1/pekerjaan').send(dummy);
         expect(res.statusCode).toEqual(400);
-        expect(res.body).toMatchObject({status: 'Error'});
+        expect(res.body).toMatchObject({status: 'Error cui'});
     });
 
     it(`Edit data pekerjaan ${id}`, async () => {

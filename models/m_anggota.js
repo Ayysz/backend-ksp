@@ -18,7 +18,8 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'pekerjaan_id'
       });
       m_anggota.hasMany(models.t_transaksi, {
-        foreignKey: 'anggota_id'
+        foreignKey: 'anggota_id',
+        as: 'anggota'
       });
       
       m_anggota.hasMany(models.t_simpan, {
