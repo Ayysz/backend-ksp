@@ -69,6 +69,16 @@ controller.checkUser = async (req, res, next) => {
     }
 };
 
+controller.cookieSet = (req, res, next) => {
+    res.header('Content-Type', 'application/json;charset=UTF-8')
+    res.header('Access-Control-Allow-Credentials', true)
+    res.header(
+        'Access-Control-Allow-Headers',
+        'Origin, X-Requested-With, Content-Type, Accept'
+    )
+    next()
+}
+
 // login controller
 controller.login = async (req, res) => {
     try {
@@ -93,7 +103,7 @@ controller.login = async (req, res) => {
             .cookie('jwt', token, config.jwt.options)
             .status(200)
             .json({
-                status: 'success',
+                status: 'Success',
                 message: 'Kamu berhasil login :D'
             });
 
@@ -235,7 +245,7 @@ controller.adminOnly = (req, res, next) => {
 controller.haloAdmin = (req, res, next) => {
     const User = req.user.data;
     return res.status(200).json({
-            status: 'success',
+            status: 'Success',
             message: `Selamat datang admin ${User.email}` 
         })
 }
@@ -287,7 +297,7 @@ controller.memberOnly = (req, res, next) => {
 controller.haloMember = (req, res, next) => {
     const User = req.user.data;
     return res.status(200).json({
-        status: 'success',
+        status: 'Success',
         message: 'Selamat datang member',
         email: User.email
     });

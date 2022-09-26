@@ -21,14 +21,20 @@ module.exports = {
       'dummy@gmail.com',
       'pokemon@gmail.com'
      ];
+     const password = [
+      'admin123',
+      'test123',
+      'dummyyum13',
+      'laland666'
+     ];
      const data = [];
 
      for(let i = 0; i < email.length; i++){
       //  const hash = await bycrypt.hash(faker.internet.password(), 10);
        const reqData = {
          email: email[i],
-         password: faker.internet.password(),
-         role_id: faker.helpers.arrayElement([1,2,3,4])
+         password: password[i],
+         role_id: i+1
        }
        data.push(reqData);
      }

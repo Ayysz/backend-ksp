@@ -26,7 +26,7 @@ module.exports = {
       issuer: 'ksp.id'
     },
     cookie: {
-      httpOnly: true,
+      httpOnly: false, //set false cause to client side can get cookies
       sameSite: true,
       signed: true,
       secure: false //for production set to true

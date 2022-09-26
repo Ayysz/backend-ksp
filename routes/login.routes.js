@@ -4,7 +4,7 @@ const controller = require('../controllers');
 const router = require('express').Router();
 const passport = require('passport');
 
-const { adminOnly, haloAdmin, staffOnly, leaderOnly, haloStaff, memberOnly }  = controller.auth; 
+const { adminOnly, haloAdmin, staffOnly, leaderOnly, haloStaff, memberOnly, cookieSet }  = controller.auth; 
 const Authorization = {
     adminOnly,
     leaderOnly,
@@ -14,7 +14,7 @@ const Authorization = {
 const authenticate = passport.authenticate('jwt', {session: false});
 
 router.post('/signup', controller.auth.signUp);
-router.post('/login', controller.auth.checkUser ,controller.auth.login);
+router.post('/login', controller.auth.checkUser, cookieSet ,controller.auth.login);
 
 // Authorization
 router.get('/userInfo', authenticate, Authorization.memberOnly, controller.auth.info);

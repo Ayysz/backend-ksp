@@ -2,18 +2,20 @@
 
 const d = new Date();
 const { faker } = require('@faker-js/faker');
-const {Op} = require('sequelize');
+const { Op } = require('sequelize');
 const Models = require('../models');
 const sequelize = Models.sequelize;
 const transaksi = Models.t_transaksi;
 const attachment = Models.t_attachment;
 const anggota = Models.m_anggota;
+const fs = require('fs-extra');
+const path = require('path');
+const filePath = path.join(__dirname, '../', '/src');
 const controller = {};
 
 // getAll data transaksi
 controller.getAll = async (req, res, next) => {
     try {
-        
         const page = parseInt(req.query.page) || 0;
         const limit = parseInt(req.query.limit) || 10;
         const search = req.query.search || "";
@@ -22,7 +24,7 @@ controller.getAll = async (req, res, next) => {
         const config1 = {
             where: {
                 [Op.or]: [
-                    {id: {[Op.like]: `%${search}%`}},
+                    {anggota_id: {[Op.like]: `%${search}%`}},
                 ]
             }
         }
@@ -45,7 +47,7 @@ controller.getAll = async (req, res, next) => {
             }
         }
 
-        const totalRows = await transaksi.count();
+        const totalRows = await transaksi.count(config1);
         const totalPages = Math.ceil(totalRows / limit);
 
         const result = await transaksi.findAll(config2);
@@ -73,13 +75,20 @@ controller.post = async (req, res, next) => {
     let transaction;
     try {
         
+        // membuat transaksi
         transaction = await sequelize.transaction();
-
-        // get data for post
+        
+        // mengambil data dari cookies dan mencari data anggota 
         const email = req.user.data.email;
         const data = await anggota.findOne({where:{email}});
+        
+        // jika data tidak ditemukan throw error
+        if(!data) throw {statusCode: 400, message: 'anggota tidak ditemukan, silahkan daftar terlebih dahulu'}
+        
         console.log(data)
         const User = data.dataValues.nama; 
+        
+        // get data for post
         const reqData = {
             no_transaksi: faker.datatype.uuid(),
             anggota_id: parseInt(data.dataValues.id),
@@ -90,14 +99,17 @@ controller.post = async (req, res, next) => {
             created_by: User,
             updated_by: User,
         };
+
+        const result = await transaksi.create(reqData, {transaction});
+
+
+        // reqData for photo
         const photo = {
             file_name: req.file.filename,
             refrence_table: 'Transaksi',
-            refrence_id: 1,
+            refrence_id: result.dataValues.id,
             anggota_id: reqData.anggota_id
         }
-
-        const result = await transaksi.create(reqData, {transaction});
         const savePhoto = await attachment.create(photo, {transaction})
         
         await transaction.commit();
@@ -106,7 +118,7 @@ controller.post = async (req, res, next) => {
         return res.status(201).json({
             status: 'Success',
             message: 'Berhasil menambah transaksi baru',
-            data: reqData
+            data: result.dataValues
         })
 
 
@@ -120,14 +132,164 @@ controller.post = async (req, res, next) => {
 
 // edit data transaksi
 controller.edit = async (req, res, next) => {
+    let transaction;
     try {
 
-        const email = req.user.data.email;
-        const {dataValues} = await anggota.findOne({where: {email}});
+        const {id} = req.params;
 
+        transaction = await sequelize.transaction();
+        
+        const email = req.user.data.email;
+        const data = await anggota.findOne({where: {email}});
+            // jika data tidak ditemukan throw error
+            if(!data) throw {statusCode: 400, message: 'anggota tidak ditemukan, silahkan daftar terlebih dahulu'}
+            const User = data.dataValues.nama;
+
+        // mencari data lama
+        const old = await transaksi.findOne({where:{id}});
+
+            if(!old) throw {statusCode: 400, message: 'Data tidak ditemukan masukan id yang benar'};
+            const refrence_id = old.dataValues.id;
+        
+        // mencari data t_attachment
+        const srcData = await attachment.findOne({
+            where: {
+                [Op.and]: [
+                    {refrence_id},
+                    {refrence_table: 'transaksi'}
+                ]
+            }
+        });
+        if(!srcData) throw {statusCode: 400, message: 'attachment tidak ditemukan'}
+        console.log(srcData);
+    
+        // remove file from src
+        // const status = !!await attachment.destroy({where: {refrence_id}}, {transaction});
+        
+        // if(!status) throw {statusCode: 400, message: 'Gagal mendelete file pada database'};
+
+        // get data for edit
+        const reqData = {
+            jenis_transaksi_id: parseInt(req.body.jenis_transaksi_id),
+            bank_id: parseInt(req.body.bank_id),
+            tanggal_transaksi: d.toLocaleDateString('en-CA'),
+            jumlah: parseFloat(req.body.jumlah),
+            updated_by: User
+        };
+
+        const [updatedRows] = await transaksi.update(reqData, {where: {id}})
+        if(!updatedRows) throw {statusCode: 400, message: 'Gagal menupdate data silahkan cek id nya terlebih dahulu'}
+        
+        // cek apakah file update ditambahkan atau tidak
+        if(req.file?.filename){
+            const photo = {
+                file_name: req.file.filename,
+                refrence_table: 'transaksi',
+                refrence_id,
+                anggota_id: old.dataValues.anggota_id
+            };
+            
+            // update t_attachment
+            const [updatedRows] = await attachment.update(photo, {
+                where: {
+                    [Op.and]: [
+                     {refrence_id},
+                     {refrence_table: photo.refrence_table}
+                ]
+                }
+            }, {transaction})
+            if(!updatedRows) throw {statusCode: 400, message: 'Gagal menupdate data attachment'}
+            
+            // menghapus file pada src
+            const src = path.join(filePath, srcData.dataValues.file_name);
+            // cek apakah file ada
+            const exist = await fs.pathExists(src);
+            if(exist){
+                fs.unlink(src, (err) => {
+                    if(err) {
+                        console.log('Error on');
+                        console.error(err)
+                    };
+                    console.log('File has been delete successfully')
+                });
+            }
+        }
+        
+
+        // commit transaction
+        await transaction.commit();
+
+        return res.status(200).json({
+            status: 'Success',
+            message: 'Berhasil mengupdate data transaksi',
+            id_transaksi: id
+        });
 
     } catch (e) {
-        next(e)
+        if(transaction){
+            await transaction.rollback();
+            next(e)
+        }
+    }
+};
+
+controller.destroy = async (req, res, next) => {
+    let transaction
+    try {
+        
+        transaction = await sequelize.transaction();
+
+        const {id} = req.params;
+
+        // mencari data lama
+        const old = await transaksi.findOne({where:{id}});
+        
+        if(!old) throw {statusCode: 400, message: 'Data tidak ditemukan masukan id yang benar'};
+
+        const refrence_id = old.dataValues.id;
+        
+        // mencari data t_attachment
+        const srcData = await attachment.findOne({
+            where: {
+                [Op.and]: [
+                    {refrence_id},
+                    {refrence_table: 'transaksi'}
+                ]
+            }
+        });
+
+        // destroy data
+        const status1 = !!await attachment.destroy({where: {id: srcData.dataValues.id}}, {transaction});
+        const status2 = !!await transaksi.destroy({where: {id}});
+        const statusAll = {
+            status1: status1,
+            status2: status2
+        };
+        console.table(statusAll)
+
+        if(!status1 && !status2) throw {statusCode: 400, message: 'Gagal mendelete file pada database'};
+
+        // menghapus data pada file src
+        const src = path.join(filePath, srcData.dataValues.file_name);
+        fs.unlink(src, async (err) => {
+            // if(err) throw {statusCode: 400, message: 'File gagal di delete pada src'}
+            if(err) throw err;
+
+            // commit transaction
+            await transaction.commit();
+            
+            return res.status(200).json({
+                status: 'Success',
+                message: 'Berhasil delete data pada database dan folder',
+                id_transaksi: id
+            })
+        });
+
+    } catch (e) {
+        if(transaction){
+            await transaction.rollback();
+            next(e)
+        }
     }
 };
 

@@ -38,7 +38,7 @@ module.exports = (sequelize, DataTypes) => {
       references: {
         model: 'm_anggota',
         key: 'id'
-      }
+      },
     },
     jenis_transaksi_id: {
       type: DataTypes.INTEGER,

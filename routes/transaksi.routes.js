@@ -9,6 +9,10 @@ router.route('/')
     .get(authenticate, Authorization.memberOnly, controller.transaksi.getAll)
     .post(authenticate, Authorization.memberOnly, upload.single('file'), controller.transaksi.post)
     
+router.route('/:id')
+    .put(authenticate, Authorization.memberOnly, upload.single('file'), controller.transaksi.edit)
+    .delete(authenticate, Authorization.memberOnly, controller.transaksi.destroy)
+
 router.use('/transaksi', router);
 
 module.exports = router;
