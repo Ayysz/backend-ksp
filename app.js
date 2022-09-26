@@ -12,9 +12,12 @@ const cors = require('cors');
 const app = express();
 
 app.use(cors({
-    origin: '*',
+    origin: (origin, callback) => {
+        return callback(null, true);      
+    },
     credentials: true,
-    methods: ['GET','POST','DELETE','UPDATE','PUT','PATCH']
+    methods: ['GET','POST','DELETE','UPDATE','PUT','PATCH'],
+    exposedHeaders: ['set-cookie']
 }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
