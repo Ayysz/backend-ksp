@@ -13,6 +13,27 @@ const path = require('path');
 const filePath = path.join(__dirname, '../', '/src');
 const controller = {};
 
+// delete file jika ada
+const dltFile = async (path, data) => {
+        const src = path.join(filePath, data)
+        
+        const exist = await fs.pathExists(src);
+        if(exist){
+            fs.unlink(src, (err) => {
+                if(err){
+                    console.log('Error on'),
+                    console.error(err)
+                }
+                console.log('File has been delete Succesfully')
+                console.log(`Path File ${src}`)
+                return true;
+            });
+            return true;
+        }else{
+            return false;
+        }
+};
+
 // getAll data transaksi
 controller.getAll = async (req, res, next) => {
     try {
@@ -83,7 +104,10 @@ controller.post = async (req, res, next) => {
         const data = await anggota.findOne({where:{email}});
         
         // jika data tidak ditemukan throw error
-        if(!data) throw {statusCode: 400, message: 'anggota tidak ditemukan, silahkan daftar terlebih dahulu'}
+        if(!data) {
+            if(req.file?.filename) await dltFile(path, req.file.filename);
+            throw {statusCode: 400, message: 'anggota tidak ditemukan, silahkan daftar terlebih dahulu'}
+        }
         
         console.log(data)
         const User = data.dataValues.nama; 
@@ -102,7 +126,6 @@ controller.post = async (req, res, next) => {
 
         const result = await transaksi.create(reqData, {transaction});
 
-
         // reqData for photo
         const photo = {
             file_name: req.file.filename,
@@ -112,9 +135,14 @@ controller.post = async (req, res, next) => {
         }
         const savePhoto = await attachment.create(photo, {transaction})
         
+        
+        if(!result) {
+            if(req.file?.file_name) await dltFile(path, req.file.filename);
+            throw {statusCode: 400, message: 'Gagal menambah transaksi baru'}
+        }
+
         await transaction.commit();
 
-        if(!result) throw {statusCode: 400, message: 'Gagal menambah transaksi baru'}
         return res.status(201).json({
             status: 'Success',
             message: 'Berhasil menambah transaksi baru',
@@ -164,20 +192,20 @@ controller.edit = async (req, res, next) => {
         console.log(srcData);
     
         // remove file from src
-        // const status = !!await attachment.destroy({where: {refrence_id}}, {transaction});
+        // const status = !!await attachment.destroy({where: {refrence_id}, transaction});
         
         // if(!status) throw {statusCode: 400, message: 'Gagal mendelete file pada database'};
 
         // get data for edit
         const reqData = {
-            jenis_transaksi_id: parseInt(req.body.jenis_transaksi_id),
-            bank_id: parseInt(req.body.bank_id),
+            jenis_transaksi_id: req.body.jenis_transaksi_id,
+            bank_id: req.body.bank_id,
             tanggal_transaksi: d.toLocaleDateString('en-CA'),
-            jumlah: parseFloat(req.body.jumlah),
+            jumlah: req.body.jumlah,
             updated_by: User
         };
 
-        const [updatedRows] = await transaksi.update(reqData, {where: {id}})
+        const [updatedRows] = await transaksi.update(reqData, {where: {id}}, {transaction})
         if(!updatedRows) throw {statusCode: 400, message: 'Gagal menupdate data silahkan cek id nya terlebih dahulu'}
         
         // cek apakah file update ditambahkan atau tidak
@@ -198,23 +226,11 @@ controller.edit = async (req, res, next) => {
                 ]
                 }
             }, {transaction})
-            if(!updatedRows) throw {statusCode: 400, message: 'Gagal menupdate data attachment'}
+            if(!updatedRows) throw {statusCode: 400, message: 'Gagal mengupdate data attachment'}
             
             // menghapus file pada src
-            const src = path.join(filePath, srcData.dataValues.file_name);
-            // cek apakah file ada
-            const exist = await fs.pathExists(src);
-            if(exist){
-                fs.unlink(src, (err) => {
-                    if(err) {
-                        console.log('Error on');
-                        console.error(err)
-                    };
-                    console.log('File has been delete successfully')
-                });
-            }
+            await dltFile(path, srcData.dataValues.file_name)
         }
-        
 
         // commit transaction
         await transaction.commit();
@@ -270,20 +286,18 @@ controller.destroy = async (req, res, next) => {
         if(!status1 && !status2) throw {statusCode: 400, message: 'Gagal mendelete file pada database'};
 
         // menghapus data pada file src
-        const src = path.join(filePath, srcData.dataValues.file_name);
-        fs.unlink(src, async (err) => {
-            // if(err) throw {statusCode: 400, message: 'File gagal di delete pada src'}
-            if(err) throw err;
+        const check = await dltFile(path, srcData.dataValues.file_name);
+        console.log(check)
+        if(check){
 
-            // commit transaction
             await transaction.commit();
-            
+
             return res.status(200).json({
                 status: 'Success',
                 message: 'Berhasil delete data pada database dan folder',
                 id_transaksi: id
             })
-        });
+        }
 
     } catch (e) {
         if(transaction){
