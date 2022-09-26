@@ -11,12 +11,14 @@ const pekerjaanRoutes = require('./pekerjaan.routes');
 const transaksiRoutes = require('./transaksi.routes');
 const miscRoutes = require('./misc.routes');
 
+// for set cookie
 router.use((req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     next();
 });
+
 router.use(authRoutes);
 router.use(pegawaiRoutes);
 router.use(jabatanRoutes);

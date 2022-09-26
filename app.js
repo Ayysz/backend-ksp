@@ -12,7 +12,9 @@ const cors = require('cors');
 const app = express();
 
 app.use(cors({
+    origin: '*',
     credentials: true,
+    methods: ['GET','POST','DELETE','UPDATE','PUT','PATCH']
 }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
