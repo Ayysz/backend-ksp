@@ -192,7 +192,7 @@ controller.getAcc = async (req, res, next) => {
         const result = await akun.findAll({
             where: {
                 role_id: {
-                    [Op.between]: [2,3]
+                    [Op.between]: [1,3]
                 }    
             }
         });
