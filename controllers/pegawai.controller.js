@@ -4,6 +4,7 @@ const { Op } = require('sequelize');
 const { errRes } = require('../helper/helper');
 const Models = require('../models');
 const jabatan = Models.m_jabatan;
+const akun = Models.m_akun;
 const pegawai = Models.m_pegawai;
 const controller = {};
 
@@ -184,15 +185,18 @@ controller.destroy = async (req, res, next) => {
     }
 };
 
-// get spesific data
-controller.getById = async (req, res, next) => {
+// get account pegawai
+controller.getAcc = async (req, res, next) => {
     try {
 
         const {id} = req.params;
 
-        const result = await pegawai.findOne({
-            raw: true,
-            where:{id},
+        const result = await akun.findAll({
+            where: {
+                role_id: {
+                    [Op.between]: [2,3]
+                }    
+            }
         });
 
         if(result){
