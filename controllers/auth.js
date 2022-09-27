@@ -192,7 +192,6 @@ controller.getAll = async (req, res, next) => {
             offset,
             limit,
             order: [ ['id', 'ASC'] ],
-            raw: true,
         }
 
         const totalRows = await user.count(config1);

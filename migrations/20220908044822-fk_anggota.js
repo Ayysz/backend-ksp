@@ -10,30 +10,30 @@ module.exports = {
      */
 
     // add foreign key column pekerjaan_id table m_anggota
-    await queryInterface.addConstraint('m_anggota', {
-      fields: ['pekerjaan_id'],
-      type: 'FOREIGN KEY',
-      name: 'FK_pekerjaan_id',
-      references: {
-        table: 'm_pekerjaan',
-        field: 'id',
-      },
-      onUpdate: 'CASCADE',
-      onDelete: 'CASCADE'
-    });
+    // await queryInterface.addConstraint('m_anggota', {
+    //   fields: ['pekerjaan_id'],
+    //   type: 'FOREIGN KEY',
+    //   name: 'FK_pekerjaan_id',
+    //   references: {
+    //     table: 'm_pekerjaan',
+    //     field: 'id',
+    //   },
+    //   onUpdate: 'CASCADE',
+    //   onDelete: 'CASCADE'
+    // });
 
-    // add foreign key column bank_id table m_anggota
-    await queryInterface.addConstraint('m_anggota', {
-      fields: ['bank_id'],
-      type: 'FOREIGN KEY',
-      name: 'FK_bank_id_anggota',
-      references: {
-        table: 'm_bank',
-        field: 'id',
-      },
-      onUpdate: 'CASCADE',
-      onDelete: 'CASCADE'
-    });
+    // // add foreign key column bank_id table m_anggota
+    // await queryInterface.addConstraint('m_anggota', {
+    //   fields: ['bank_id'],
+    //   type: 'FOREIGN KEY',
+    //   name: 'FK_bank_id_anggota',
+    //   references: {
+    //     table: 'm_bank',
+    //     field: 'id',
+    //   },
+    //   onUpdate: 'CASCADE',
+    //   onDelete: 'CASCADE'
+    // });
 
     // add foreign key column email table m_anggota
     await queryInterface.addConstraint('m_anggota', {

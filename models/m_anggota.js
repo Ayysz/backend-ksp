@@ -11,12 +11,14 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      m_anggota.belongsTo(models.m_bank, {
-        foreignKey: 'bank_id',
-      });
+      // m_anggota.belongsTo(models.m_bank, {
+      //   foreignKey: 'bank_id',
+      // });
+
       m_anggota.belongsTo(models.m_pekerjaan, {
         foreignKey: 'pekerjaan_id'
       });
+
       m_anggota.hasMany(models.t_transaksi, {
         foreignKey: 'anggota_id',
         as: 'anggota'
@@ -26,6 +28,13 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'anggota_id'
       });
       
+      m_anggota.hasMany(models.t_pinjam, {
+        foreignKey: 'anggota_id'
+      });
+
+      // m_anggota.hasMany(models.m_bankanggota, {
+      //   foreignKey: 'anggota_id'
+      // });
     }
   }
   m_anggota.init({
@@ -45,7 +54,8 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       validate: {
         notEmpty: {
-          msg: 'Masukan nama'
+          args: true,
+          msg: 'Masukan nama '
         }
       }
     },
@@ -92,6 +102,7 @@ module.exports = (sequelize, DataTypes) => {
         notEmpty: true,
         notNull: true,
         isEmail: {
+          args: true,
           msg: 'Masukan email yang valid'
         }
       }

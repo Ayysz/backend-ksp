@@ -15,11 +15,17 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'nama_bank_id',
         as: 'namaBank'
       })
+
       m_bank.belongsTo(models.m_jenis_kepemilikan, {
         foreignKey: 'jenis_kepemilikan_id',
         as: 'jenisKepemilikan'
       })
-      m_bank.hasOne(models.m_anggota, {
+
+      // m_bank.hasOne(models.m_anggota, {
+      //   foreignKey: 'bank_id'
+      // })
+
+      m_bank.hasMany(models.m_bank, {
         foreignKey: 'bank_id'
       })
     }

@@ -8,31 +8,8 @@ const sequelize = Models.sequelize;
 const transaksi = Models.t_transaksi;
 const attachment = Models.t_attachment;
 const anggota = Models.m_anggota;
-const fs = require('fs-extra');
-const path = require('path');
-const filePath = path.join(__dirname, '../', '/src');
 const controller = {};
-
-// delete file jika ada
-const dltFile = async (path, data) => {
-        const src = path.join(filePath, data)
-        
-        const exist = await fs.pathExists(src);
-        if(exist){
-            fs.unlink(src, (err) => {
-                if(err){
-                    console.log('Error on'),
-                    console.error(err)
-                }
-                console.log('File has been delete Succesfully')
-                console.log(`Path File ${src}`)
-                return true;
-            });
-            return true;
-        }else{
-            return false;
-        }
-};
+const { dltFile } = require('../helper/fileDelete');
 
 // getAll data transaksi
 controller.getAll = async (req, res, next) => {
@@ -72,8 +49,8 @@ controller.getAll = async (req, res, next) => {
         const totalPages = Math.ceil(totalRows / limit);
 
         const result = await transaksi.findAll(config2);
-
-        if(!result){
+        
+        if(result.length === 0){
             throw {statusCode: 400, message: 'Data transaksi tidak ditemukan'}
         }
         return res.status(200).json({
@@ -105,7 +82,7 @@ controller.post = async (req, res, next) => {
         
         // jika data tidak ditemukan throw error
         if(!data) {
-            if(req.file?.filename) await dltFile(path, req.file.filename);
+            if(req.file?.filename) await dltFile(req.file.filename);
             throw {statusCode: 400, message: 'anggota tidak ditemukan, silahkan daftar terlebih dahulu'}
         }
         
@@ -129,7 +106,7 @@ controller.post = async (req, res, next) => {
         // reqData for photo
         const photo = {
             file_name: req.file.filename,
-            refrence_table: 'Transaksi',
+            refrence_table: 'transaksi',
             refrence_id: result.dataValues.id,
             anggota_id: reqData.anggota_id
         }
@@ -137,7 +114,7 @@ controller.post = async (req, res, next) => {
         
         
         if(!result) {
-            if(req.file?.file_name) await dltFile(path, req.file.filename);
+            if(req.file?.file_name) await dltFile(req.file.filename);
             throw {statusCode: 400, message: 'Gagal menambah transaksi baru'}
         }
 
@@ -229,7 +206,7 @@ controller.edit = async (req, res, next) => {
             if(!updatedRows) throw {statusCode: 400, message: 'Gagal mengupdate data attachment'}
             
             // menghapus file pada src
-            await dltFile(path, srcData.dataValues.file_name)
+            await dltFile(srcData.dataValues.file_name)
         }
 
         // commit transaction
@@ -284,10 +261,10 @@ controller.destroy = async (req, res, next) => {
         console.table(statusAll)
 
         if(!status1 && !status2) throw {statusCode: 400, message: 'Gagal mendelete file pada database'};
-
+        
         // menghapus data pada file src
-        const check = await dltFile(path, srcData.dataValues.file_name);
-        console.log(check)
+        const check = await dltFile(srcData.dataValues.file_name);
+
         if(check){
 
             await transaction.commit();

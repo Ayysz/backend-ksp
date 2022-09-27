@@ -17,10 +17,19 @@ module.exports = (sequelize, DataTypes) => {
       t_permohonan.belongsTo(models.m_pegawai, {
         foreignKey: 'staff_id',
       });
+      t_permohonan.belongsTo(models.t_pinjam, {
+        foreignKey: 'pinjam_id'
+      })
     }
   }
   t_permohonan.init({
-    pinjam_id: DataTypes.INTEGER,
+    pinjam_id: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: 't_pinjam',
+        key: 'id'
+      }
+    },
     pimpinan_id: {
       type: DataTypes.INTEGER,
       references: {
@@ -54,9 +63,11 @@ module.exports = (sequelize, DataTypes) => {
           is_approve,
           is_waiting
         } = t_permohonan;
-        let piece = statusCheck(t_permohonan, is_approve,is_waiting);
+        let piece = await statusCheck(sequelize.models.m_pegawai ,t_permohonan, is_approve,is_waiting);
+        const result = await sequelize.models.t_pinjam.findOne({where: {id: t_permohonan.pinjam_id}});
+        const no_pinjam = result.dataValues.no_pinjam;
         const reqData ={
-          no_pinjam: t_permohonan.id,
+          no_pinjam,
           ...piece,
           tanggal_permohonan: t_permohonan.tanggal_persetujuan,
           createdAt: new Date()
@@ -68,44 +79,63 @@ module.exports = (sequelize, DataTypes) => {
   return t_permohonan;
 };
 
-const statusCheck = (t_permohonan, is_approve, is_waiting) => {
-  let piece;
+const statusCheck = async (models, t_permohonan, is_approve, is_waiting) => {
+  let nama_pegawai, data;
   switch(true){
     case(is_approve === true && is_waiting === false):
-      return piece = {
-        status: 'ditinjau',
-        oleh: 'staff',
-        nama_pegawai: t_permohonan.staff_id,
-      };
+    data = await findPegawai(models, t_permohonan.staff_id);
+    nama_pegawai = data.dataValues.nama;
+    return {
+      status: 'ditinjau',
+      oleh: 'staff',
+      nama_pegawai,
+    };
     break;
     case(is_approve === false && is_waiting === false):
-      return piece = {
-        status: 'disetujui',
-        oleh: 'pimpinan',
-        nama_pegawai: t_permohonan.pimpinan_id,
-      };
+    data = await findPegawai(models, t_permohonan.staff_id);
+    nama_pegawai = data.dataValues.nama;
+    return {
+      status: 'disetujui',
+      oleh: 'pimpinan',
+      nama_pegawai
+    };
     break;
     case(is_approve === false && is_waiting === true):
-      return piece = {
-        status: 'ditinjau',
-        oleh: 'pimpinan',
-        nama_pegawai: t_permohonan.pimpinan_id,
-      };
+    data = await findPegawai(models, t_permohonan.staff_id);
+    nama_pegawai = data.dataValues.nama;
+    return{
+      status: 'ditinjau',
+      oleh: 'pimpinan',
+      nama_pegawai
+    };
     break;
     case(is_approve === true && is_waiting === true):
-      return piece = {
-        status: 'ditolak',
-        oleh: 'pimpinan',
-        nama_pegawai: t_permohonan.pimpinan_id,
-      }
+    data = await findPegawai(models, t_permohonan.staff_id);
+    nama_pegawai = data.dataValues.nama;
+    return{
+      status: 'ditolak',
+      oleh: 'pimpinan',
+      nama_pegawai
+    }
     break;
     default:
-      return piece = {
+      data = await findPegawai(models, t_permohonan.staff_id);
+      nama_pegawai = data.dataValues.nama;
+      return{
         status: 'ditinjau',
         oleh: 'staff',
-        nama_pegawai: t_permohonan.staff_id,
+        nama_pegawai
       }
     break;
+  }
+}
+
+const findPegawai = async(m,id) => {
+  try {
+      const data = await m.findOne({where: {id}});
+      return data;
+  } catch (e) {
+   console.log(e) 
   }
 }
 

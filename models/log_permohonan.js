@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   log_permohonan.init({
-    no_pinjam: DataTypes.INTEGER,
+    no_pinjam: DataTypes.UUID,
     status: DataTypes.STRING,
     oleh: DataTypes.STRING,
     nama_pegawai: DataTypes.STRING,

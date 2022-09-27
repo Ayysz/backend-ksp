@@ -30,7 +30,6 @@ controller.getAll = async (req, res, next) => {
             offset: offside,
             limit,
             order: [ ['id', 'ASC'] ],
-            raw: true,
             include:{
                 model: jabatan,
                 attributes: {

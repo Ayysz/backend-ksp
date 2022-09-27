@@ -6,6 +6,7 @@ const bankController = require('./bank.controller');
 const namaBankController = require('./nama_bank.controller');
 const pekerjaanController = require('./pekerjaan.controller');
 const transaksiController = require('./transaksi.controller');
+const simpanController = require('./simpan.controller');
 const miscController = require('./misc.controller');
 const controller = {};
 
@@ -17,6 +18,7 @@ controller.bank = bankController;
 controller.namaBank = namaBankController;
 controller.pekerjaan = pekerjaanController;
 controller.transaksi = transaksiController;
+controller.simpan = simpanController;
 controller.misc = miscController;
 
 module.exports = controller;

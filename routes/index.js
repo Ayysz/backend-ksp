@@ -9,6 +9,7 @@ const bankRoutes = require('./bank.routes');
 const namaBankRoutes = require('./nama_bank.routes');
 const pekerjaanRoutes = require('./pekerjaan.routes');
 const transaksiRoutes = require('./transaksi.routes');
+const simpanRoutes = require('./simpan.routes');
 const miscRoutes = require('./misc.routes');
 
 router.use(authRoutes);
@@ -19,6 +20,7 @@ router.use(bankRoutes);
 router.use(namaBankRoutes);
 router.use(pekerjaanRoutes);
 router.use(transaksiRoutes);
+router.use(simpanRoutes);
 router.use(miscRoutes);
 
 module.exports = router;

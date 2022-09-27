@@ -16,8 +16,8 @@ module.exports = {
 
     for(let i = 0; i < 3; i++){
       const reqData = {
-        jabatan: faker.word.adjective(5),
-        desc: faker.lorem.words(4),
+        jabatan: faker.name.jobTitle(),
+        desc: faker.name.jobDescriptor(),
         is_active: faker.helpers.arrayElement([0,1]),
         createdAt: new Date(),
         updatedAt: new Date()

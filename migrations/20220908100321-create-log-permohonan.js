@@ -9,7 +9,7 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       no_pinjam: {
-        type: Sequelize.INTEGER(13)
+        type: Sequelize.UUID
       },
       status: {
         type: Sequelize.STRING

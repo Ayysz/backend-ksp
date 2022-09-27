@@ -18,7 +18,7 @@ controller.getAll = async (req, res, next) => {
         const config1 = {
             where: {
                 [Op.or]: [
-                    {id: {[Op.like]: `%${search}%`}},
+                    {jenis_kepemilikan_id: {[Op.like]: `%${search}%`}},
                     {nama_pemilik_bank: {[Op.like]: `%${search}%`}}
                 ]
             }
@@ -69,7 +69,7 @@ controller.getAll = async (req, res, next) => {
         // mencari data
         const result = await bank.findAll(config2);
 
-        if(!result) throw {statusCode: 400, message: 'Data bank tidak ditemukan'};
+        if(result.length === 0) throw {statusCode: 400, message: 'Data bank tidak ditemukan'};
 
         return res.status(200)
             .json({
