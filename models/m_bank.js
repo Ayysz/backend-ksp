@@ -21,12 +21,13 @@ module.exports = (sequelize, DataTypes) => {
         as: 'jenisKepemilikan'
       })
 
-      // m_bank.hasOne(models.m_anggota, {
-      //   foreignKey: 'bank_id'
-      // })
+        // m_bank.hasOne(models.m_anggota, {
+        //   foreignKey: 'bank_id'
+        // })
 
-      m_bank.hasMany(models.m_bank, {
-        foreignKey: 'bank_id'
+      m_bank.belongsTo(models.m_anggota, {
+        foreignKey: 'anggota_id',
+        as: 'bank'
       })
     }
   }
@@ -70,6 +71,14 @@ module.exports = (sequelize, DataTypes) => {
           args: [1,16],
         },
         notEmpty: true
+      }
+    },
+    anggota_id: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: 'm_anggota',
+        key: 'id',
+        as: 'bank'
       }
     },
     is_active: DataTypes.BOOLEAN

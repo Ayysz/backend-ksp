@@ -65,9 +65,23 @@ controller.getAll = async (req, res, next) => {
                 },
                 {
                     model: bank,
+                    as: 'bank',
+                    attributes: {
+                        exclude: [
+                            'id',
+                            'anggota_id',
+                            'jenis_kepemilikan_id',
+                            'nama_bank_id'
+                        ]
+                    },
                     include: {
                         model: namaBank,
-                        as: 'namaBank'
+                        as: 'namaBank',
+                        attributes: {
+                            exclude: [
+                                'id',
+                            ]
+                        }
                     },
                     required: true,
                 },

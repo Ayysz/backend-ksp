@@ -189,8 +189,6 @@ controller.destroy = async (req, res, next) => {
 controller.getAcc = async (req, res, next) => {
     try {
 
-        const {id} = req.params;
-
         const result = await akun.findAll({
             where: {
                 role_id: {
@@ -202,7 +200,7 @@ controller.getAcc = async (req, res, next) => {
         if(result){
             return res.status(200).json({
                 status: 'Success',
-                message: `Data pegawai nomor ${id}`,
+                message: `Data akun pegawai`,
                 data: result
             })
         }
@@ -210,7 +208,7 @@ controller.getAcc = async (req, res, next) => {
         // throw new error
         throw {
                 statusCode: 400, 
-                message: `Data pegawai nomor ${id} tidak ditemukan`
+                message: `Data akun pegawai tidak ditemukan`
             };
 
 

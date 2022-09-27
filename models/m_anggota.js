@@ -11,9 +11,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      // m_anggota.belongsTo(models.m_bank, {
-      //   foreignKey: 'bank_id',
-      // });
+      m_anggota.hasMany(models.m_bank, {
+        foreignKey: 'anggota_id',
+        as: 'bank'
+      });
 
       m_anggota.belongsTo(models.m_pekerjaan, {
         foreignKey: 'pekerjaan_id'
@@ -31,10 +32,6 @@ module.exports = (sequelize, DataTypes) => {
       m_anggota.hasMany(models.t_pinjam, {
         foreignKey: 'anggota_id'
       });
-
-      // m_anggota.hasMany(models.m_bankanggota, {
-      //   foreignKey: 'anggota_id'
-      // });
     }
   }
   m_anggota.init({
@@ -111,13 +108,6 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       references: {
         model: 'm_pekerjaan',
-        key: 'id'
-      }
-    },
-    bank_id: {
-      type: DataTypes.INTEGER,
-      references: {
-        model: 'm_bank',
         key: 'id'
       }
     },

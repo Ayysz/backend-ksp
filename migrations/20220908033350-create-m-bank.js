@@ -21,6 +21,9 @@ module.exports = {
       no_rek: {
         type: Sequelize.STRING
       },
+      anggota_id: {
+        type: Sequelize.INTEGER
+      },
       is_active: {
         defaultValue: 1,
         type: Sequelize.BOOLEAN

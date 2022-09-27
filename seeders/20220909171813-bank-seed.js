@@ -20,6 +20,7 @@ module.exports = {
         nama_pemilik_bank: faker.name.firstName(),
         jenis_kepemilikan_id: faker.helpers.arrayElement([1,2]),
         no_rek: faker.finance.creditCardNumber(),
+        anggota_id: faker.helpers.arrayElement([1,2]),
         is_active: 1,
         createdAt: new Date(),
         updatedAt: new Date()

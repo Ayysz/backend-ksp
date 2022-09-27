@@ -43,9 +43,6 @@ module.exports = {
       pekerjaan_id: {
         type: Sequelize.INTEGER
       },
-      bank_id: {
-        type: Sequelize.INTEGER
-      },
       is_waiting: {
         type: Sequelize.BOOLEAN,
         defaultValue: 1,

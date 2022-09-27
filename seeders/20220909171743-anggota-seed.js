@@ -32,7 +32,6 @@ module.exports = {
         alamat: faker.address.streetAddress(false),
         email: email[i],
         pekerjaan_id: faker.helpers.arrayElement([1,2]),
-        bank_id: faker.helpers.arrayElement([1,2]),
         createdAt: new Date(),
         updatedAt: new Date()
       }
