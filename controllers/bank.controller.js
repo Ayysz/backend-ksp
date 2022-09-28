@@ -10,18 +10,30 @@ const controller = {};
 
 // get all data 
 controller.getAll = async (req, res, next) => {
+    let conf;
     try {
         const page = parseInt(req.query.page) || 0;
         const limit = parseInt(req.query.limit) || 10;
         const search = req.query.search || '';
+        const id = parseInt(req.query.Id);
         const offset = page * limit;
 
-        const config1 = {
-            where: {
+        if(id){
+            conf = {
+                id
+            }
+        }else{
+            conf = {
                 [Op.or]: [
                     {jenis_kepemilikan_id: {[Op.like]: `%${search}%`}},
                     {nama_pemilik_bank: {[Op.like]: `%${search}%`}}
                 ]
+            }
+        }
+
+        const config1 = {
+            where: {
+                ...conf
             }
         }
 
