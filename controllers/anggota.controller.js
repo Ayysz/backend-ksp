@@ -29,6 +29,7 @@ const checkStaff = (check) => {
 
 // get All data anggota
 controller.getAll = async (req, res, next) => {
+    let conf;
     try {
         
         const page = parseInt(req.query.page) || 0;
