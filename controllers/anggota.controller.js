@@ -35,14 +35,25 @@ controller.getAll = async (req, res, next) => {
         const limit = parseInt(req.query.limit) || 10;
         const search = req.query.search || '';
         // const active = 
+        const id = parseInt(req.query.Id);
         const offset = page * limit;
+
+        if(id){
+            conf = {
+                id
+            }
+        }else{
+            conf = {
+                [Op.or]: [
+                    {jenis_kepemilikan_id: {[Op.like]: `%${search}%`}},
+                    {nama_pemilik_bank: {[Op.like]: `%${search}%`}}
+                ]
+            }
+        }
 
         const config1 = {
             where: {
-                [Op.or]: [
-                    {no_anggota: {[Op.like]: `%${search}%`}},
-                    {nama: {[Op.like]: `%${search}%`}},
-                ]
+                ...conf
             }
         }
 

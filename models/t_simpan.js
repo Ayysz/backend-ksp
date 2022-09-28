@@ -29,6 +29,10 @@ module.exports = (sequelize, DataTypes) => {
     tanggal_simpan: DataTypes.DATEONLY,
     jangka_simpan: DataTypes.DATEONLY,
     anggota_id: DataTypes.INTEGER,
+    total: {
+      type: DataTypes.DOUBLE,
+      allowNull: false
+    },
     jumlah: DataTypes.DOUBLE,
     jenis_simpanan_id: {
       type:DataTypes.INTEGER,
@@ -46,5 +50,20 @@ module.exports = (sequelize, DataTypes) => {
     modelName: 't_simpan',
     freezeTableName: true,
   });
+
+  // create log_simpan after input
+  t_simpan.afterCreate(async (t_simpan, opt) => {
+
+  });
+
+  // add data values before update
+  t_simpan.beforeUpdate(async (t_simpan, opt) => {
+    console.log(t_simpan.dataValues); // new values
+    console.log(t_simpan._previousDataValues); // current values
+
+    t_simpan.dataValues.jumlah += t_simpan.dataValues.jumlah;
+    return console.log(t_simpan.dataValues.jumlah += t_simpan.dataValues.jumlah)
+  });
+
   return t_simpan;
 };

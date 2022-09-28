@@ -74,8 +74,28 @@ module.exports = (sequelize, DataTypes) => {
         };   
         
         await sequelize.models.log_permohonan.create(reqData);
-  
-  });
+        
+      });
+      
+      // auto input to log permohonan after data update
+      t_permohonan.afterUpdate(async (t_permohonan, opt) => {
+        const{
+          is_approve,
+          is_waiting
+        } = t_permohonan;
+        let piece = await statusCheck(sequelize.models.m_pegawai ,t_permohonan, is_approve,is_waiting);
+        const result = await sequelize.models.t_pinjam.findOne({where: {id: t_permohonan.pinjam_id}});
+        const no_pinjam = result.dataValues.no_pinjam;
+        const reqData ={
+          no_pinjam,
+          ...piece,
+          tanggal_permohonan: t_permohonan.tanggal_persetujuan,
+          updatedAt: new Date()
+        };   
+        
+        await sequelize.models.log_permohonan.create(reqData);
+
+      })
   return t_permohonan;
 };
 

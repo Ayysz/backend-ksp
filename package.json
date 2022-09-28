@@ -5,9 +5,10 @@
   "main": "index.js",
   "scripts": {
     "demon": "nodemon --delay 1.3 app.js",
+    "migration": "npx sequelize-cli db:create && npx sequelize-cli db:migrate",
     "test": "cross-env NODE_ENV=test jest --coverage --testTimeOut=8000 --detectOpenHandles --forceExit",
     "pretest": "cross-env NODE_ENV=test npm run db:reset",
-    "first": "npx sequelize-cli db:create && npx sequelize-cli db:migrate && npx sequelize-cli db:seed:all",
+    "first": "npm run migration && npx sequelize-cli db:seed:all",
     "db:reset": "npx sequelize-cli db:drop && npm run first",
     "db:create:test": "cross-env NODE_ENV=test npx sequelize-cli db:create"
   },

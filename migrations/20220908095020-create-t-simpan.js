@@ -20,6 +20,10 @@ module.exports = {
       anggota_id: {
         type: Sequelize.INTEGER
       },
+      total: {
+        allowNull: false,
+        type: Sequelize.DOUBLE
+      },
       jumlah: {
         type: Sequelize.DOUBLE
       },
