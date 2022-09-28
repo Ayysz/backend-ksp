@@ -8,6 +8,7 @@ const pekerjaanController = require('./pekerjaan.controller');
 const transaksiController = require('./transaksi.controller');
 const simpanController = require('./simpan.controller');
 const pinjamController = require('./pinjam.controller');
+const permohonanController = require('./permohonan.controller');
 const miscController = require('./misc.controller');
 const controller = {};
 
@@ -21,6 +22,7 @@ controller.pekerjaan = pekerjaanController;
 controller.transaksi = transaksiController;
 controller.simpan = simpanController;
 controller.pinjam = pinjamController;
+controller.permohonan = permohonanController;
 controller.misc = miscController;
 
 module.exports = controller;

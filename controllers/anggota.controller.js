@@ -232,7 +232,12 @@ controller.info = async (req, res, next) => {
 
         const email = req.user.data.email;
 
-        const data = await anggota.findOne({where: {email}});
+        const data = await anggota.findOne({
+            where: {email},
+            include: {
+                model: pekerjaan,
+            }
+        });
 
         if(!data) throw {statusCode: 400, message: 'Data anggota tidak ditemukan silahkan daftar'}
 
