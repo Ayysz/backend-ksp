@@ -88,6 +88,7 @@ controller.post = async (req, res, next) => {
             tanggal_lahir,
             tempat_lahir,
             alamat,
+            email,
             jabatan_id
         } = req.body;
 
@@ -100,7 +101,7 @@ controller.post = async (req, res, next) => {
             tanggal_lahir,
             tempat_lahir,
             alamat,
-            email: emailUser,
+            email: email || emailUser,
             jabatan_id: jabatan_id || 1,
         };
 
@@ -134,6 +135,7 @@ controller.edit = async (req, res, next) => {
             no_hp: req.body.no_hp,
             no_ktp: req.body.no_ktp,
             gender: req.body.gender,
+            email: req.body.email || req.user.data.email,
             tanggal_lahir: req.body.tanggal_lahir,
             tempat_lahir: req.body.tempat_lahir,
             alamat: req.body.alamat,
@@ -189,15 +191,31 @@ controller.destroy = async (req, res, next) => {
 controller.getAcc = async (req, res, next) => {
     try {
 
-        const result = await akun.findAll({
-            where: {
-                role_id: {
-                    [Op.between]: [1,3]
-                }    
-            }
+        const result = await pegawai.findAll({
+            include: [
+                {
+                    model: akun,
+                    where: {
+                        role_id: {
+                            [Op.between]: [1,3]
+                        }    
+                    }
+                },
+                {
+                    model: jabatan, 
+                    attributes: {
+                        exclude: [
+                            'id',
+                            'createdAt', 
+                            'updatedAt',
+                            'is_active'
+                        ]
+                    }
+                }
+            ]
         });
 
-        if(result){
+        if(result.length !== 0){
             return res.status(200).json({
                 status: 'Success',
                 message: `Data akun pegawai`,

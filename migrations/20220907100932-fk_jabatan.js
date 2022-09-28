@@ -30,11 +30,12 @@ module.exports = {
       references: {
         table: 'm_akun',
         field: 'email',
-        as: 'email'
+        unique: true,
       },
       onUpdate: 'CASCADE',
       onDelete: 'CASCADE'
     });
+
   },
 
   async down (queryInterface, Sequelize) {

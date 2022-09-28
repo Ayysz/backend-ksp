@@ -15,6 +15,11 @@ module.exports = (sequelize, DataTypes) => {
       m_akun.belongsTo(models.m_role, {
         foreignKey: 'role_id'
       })
+
+      m_akun.hasOne(models.m_pegawai, {
+        foreignKey: 'email',
+        unique: true,
+      })
     }
   }
   m_akun.init({

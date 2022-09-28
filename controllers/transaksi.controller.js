@@ -129,6 +129,7 @@ controller.post = async (req, res, next) => {
 
     } catch (e) {
         if(transaction){
+            if(req.file?.filename) await dltFile(req.file.filename);
             await transaction.rollback();
             next(e)
         } 

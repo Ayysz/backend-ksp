@@ -14,6 +14,11 @@ module.exports = (sequelize, DataTypes) => {
       m_pegawai.belongsTo(models.m_jabatan, {
         foreignKey: 'jabatan_id'
       });
+
+      m_pegawai.belongsTo(models.m_akun, {
+        foreignKey: 'email',
+        targetKey: 'email'
+      })
     }
   }
   m_pegawai.init({
@@ -75,11 +80,16 @@ module.exports = (sequelize, DataTypes) => {
     alamat: DataTypes.TEXT,
     email: {
       type: DataTypes.STRING,
+      references: {
+        model: 'm_akun',
+        key: 'email'
+      },
       allowNull: false,
       validate: {
         notEmpty: true,
         notNull: true,
         isEmail: {
+          args: true,
           msg: 'Masukan email yang valid'
         }
       }

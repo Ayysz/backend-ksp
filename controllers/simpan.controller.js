@@ -4,11 +4,11 @@ const d = new Date();
 const { faker } = require('@faker-js/faker');
 const { Op } = require('sequelize');
 const Models = require('../models');
+const sequelize = Models.sequelize
 const simpan = Models.t_simpan;
 const anggota = Models.m_anggota;
 const attachment = Models.t_attachment;
 const { dltFile } = require('../helper/fileDelete');
-const { sequelize } = require('../models');
 const controller = {};
 
 // getAll data simpanan
@@ -65,14 +65,14 @@ controller.post = async (req, res, next) => {
         transaction = await sequelize.transaction();
 
         const email = req.user.data.email;
-        const data = await anggota.findOne({where: email});
+        const data = await anggota.findOne({ where: {email} });
 
+        console.log(req.file?.filename);
         if(!data){
             if(req.file?.filename) await dltFile(req.file.filename);
             throw {statusCode: 400, message: 'anggota tidak ditemukan, silahkan daftar terlebih dahulu'}
         }
 
-        console.log(data)
         const User = data.dataValues.nama;
 
         const reqData = {
@@ -101,9 +101,39 @@ controller.post = async (req, res, next) => {
             throw {statusCode: 400, message: 'Gagal membuat transaksi baru'}
         }
 
+        await transaction.commit();
+
+        return res.status(201).json({
+            status: 'Success',
+            message: 'Berhasil menambah simpanan baru',
+            data: result.dataValues
+        })
+
+    } catch (e) {
+        if(transaction){
+            if(req.file?.filename) await dltFile(req.file.filename);
+            await transaction.rollback();
+            next(e)
+        }
+    }
+};
+
+// edit simpanan
+controller.edit = async (req, res, next) => {
+    let transaction;
+    try {
+        
+        const {id} = req.params;
+
+        transaction = sequelize.transaction();
+
+        
+        
+
     } catch (e) {
         next(e)
     }
 };
+
 
 module.exports = controller;

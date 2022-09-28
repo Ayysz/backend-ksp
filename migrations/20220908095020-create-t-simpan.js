@@ -23,6 +23,10 @@ module.exports = {
       jenis_simpanan_id: {
         type: Sequelize.INTEGER
       },
+      is_done: {
+        defaultValue: 0,
+        type: Sequelize.BOOLEAN,
+      },
       is_active: {
         defaultValue: 1,
         type: Sequelize.BOOLEAN

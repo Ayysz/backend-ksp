@@ -3,6 +3,7 @@
 const { Op } = require('sequelize');
 const Models = require('../models');
 const bank = Models.m_bank;
+const anggota = Models.m_anggota;
 const namaBank = Models.m_nama_bank;
 const kepemillikan = Models.m_jenis_kepemilikan;
 const controller = {};
@@ -69,6 +70,7 @@ controller.getAll = async (req, res, next) => {
         // mencari data
         const result = await bank.findAll(config2);
 
+        console.log(result);
         if(result.length === 0) throw {statusCode: 400, message: 'Data bank tidak ditemukan'};
 
         return res.status(200)
@@ -90,10 +92,16 @@ controller.getAll = async (req, res, next) => {
 // post data bank
 controller.post = async (req, res, next) => {
     try {
+
+        const email = req.user.data.email;
+
+        const data = await anggota.findOne({where: {email}});
+
         const reqData = {
             nama_bank_id: req.body.nama_bank_id,
             nama_pemilik_bank: req.body.nama_pemilik_bank,
             jenis_kepemilikan_id: req.body.jenis_kepemilikan_id || 1,
+            anggota_id: data.dataValues.id || null,
             no_rek: req.body.no_rek,
         };
 

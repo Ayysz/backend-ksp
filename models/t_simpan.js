@@ -36,6 +36,7 @@ module.exports = (sequelize, DataTypes) => {
         key: 'id'
       }
     },
+    is_done: DataTypes.BOOLEAN,
     is_active: DataTypes.BOOLEAN,
     created_by: DataTypes.STRING,
     updated_by: DataTypes.STRING,

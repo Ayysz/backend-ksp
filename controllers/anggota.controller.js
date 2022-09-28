@@ -83,7 +83,6 @@ controller.getAll = async (req, res, next) => {
                             ]
                         }
                     },
-                    required: true,
                 },
             ]
         }
@@ -94,7 +93,7 @@ controller.getAll = async (req, res, next) => {
         // mencari data
         const result = await anggota.findAll(config2);
 
-        if(!result){
+        if(result.length === 0){
             throw {statusCode: 400, message: 'Data anggota tidak ditemukan'}
         }
         return res.status(200)
@@ -207,8 +206,8 @@ controller.destroy = async (req, res, next) => {
         if(!result) throw {statusCode: 400, message: 'Gagal delete data anggota'};
         return res.status(200).json({
             status: 'Success',
-            message: 'Berhasil delete data pegawai',
-            id_pegawai: id
+            message: 'Berhasil delete data anggota',
+            id_anggota: id
         });
 
     } catch (e) {
