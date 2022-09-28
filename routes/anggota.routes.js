@@ -7,8 +7,10 @@ const { authenticate, Authorization } = require('./login.routes');
 
 router.route('/')
     .get(controller.anggota.getAll)
-    .get('/data', authenticate, Authorization.memberOnly, controller.anggota.info)
     .post(authenticate, Authorization.memberOnly, controller.anggota.post);
+
+router.get('/info', authenticate, Authorization.memberOnly, controller.anggota.info)
+    
 router.route('/:id')
     .put(authenticate, Authorization.staffOnly, controller.anggota.edit)
     .delete(authenticate, Authorization.adminOnly, controller.anggota.destroy);
