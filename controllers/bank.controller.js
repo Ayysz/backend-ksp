@@ -101,7 +101,7 @@ controller.post = async (req, res, next) => {
             nama_bank_id: req.body.nama_bank_id,
             nama_pemilik_bank: req.body.nama_pemilik_bank,
             jenis_kepemilikan_id: req.body.jenis_kepemilikan_id || 1,
-            anggota_id: data.dataValues.id || null,
+            anggota_id: data?.dataValues?.id ?? null,
             no_rek: req.body.no_rek,
         };
 

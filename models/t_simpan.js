@@ -27,6 +27,7 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
     tanggal_simpan: DataTypes.DATEONLY,
+    jangka_simpan: DataTypes.DATEONLY,
     anggota_id: DataTypes.INTEGER,
     jumlah: DataTypes.DOUBLE,
     jenis_simpanan_id: {

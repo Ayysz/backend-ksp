@@ -14,6 +14,9 @@ module.exports = {
       tanggal_simpan: {
         type: Sequelize.DATEONLY
       },
+      jangka_simpan: {
+        type: Sequelize.DATEONLY
+      },
       anggota_id: {
         type: Sequelize.INTEGER
       },
