@@ -23,15 +23,15 @@ module.exports = (sequelize, DataTypes) => {
   }
   m_pegawai.init({
     no_pegawai: {
-      type: DataTypes.STRING(13),
+      type: DataTypes.UUID,
       allowNull: false,
       validate: {
         notEmpty: true,
         notNull: true,
-        len: {
-          msg: 'Masukan maksimal 13 digit angka',
-          args: [1,13],
-        }
+        // len: {
+        //   msg: 'Masukan maksimal 13 digit angka',
+        //   args: [1,13],
+        // }
       }
     },
     nama: {
