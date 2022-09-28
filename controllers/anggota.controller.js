@@ -1,5 +1,6 @@
 'use strict'
 
+const { faker } = require('@faker-js/faker');
 const { Op } = require('sequelize');
 const Models = require('../models');
 const akun = Models.m_akun;
@@ -132,7 +133,7 @@ controller.post = async (req, res, next) => {
         const count = await anggota.count();
         
         const reqData = {
-            no_anggota: req.body.no_anggota,
+            no_anggota: req.body.no_anggota || faker.datatype.uuid(),
             nama: req.body.nama,
             no_ktp: req.body.no_ktp,
             no_hp: req.body.no_hp,
@@ -173,7 +174,6 @@ controller.edit = async (req, res, next) => {
         const approve = checkStaff(is_staff)
 
         const reqData = {
-            no_anggota: req.body.no_anggota,
             nama: req.body.nama,
             no_ktp: req.body.no_ktp,
             no_hp: req.body.no_hp,
@@ -181,7 +181,6 @@ controller.edit = async (req, res, next) => {
             tanggal_lahir: req.body.tanggal_lahir,
             tempat_lahir: req.body.tempat_lahir,
             alamat: req.body.alamat,
-            email: req.user.data.email,
             pekerjaan_id: req.body.pekerjaan_id || 1,
             bank_id: req.body.bank_id || 1,
             ...approve
@@ -239,7 +238,7 @@ controller.info = async (req, res, next) => {
 
         return res.status(200).json({
             status: 'Success',
-            message: 'Data anggota ditemuka',
+            message: 'Data anggota ditemukan',
             data
         })
 

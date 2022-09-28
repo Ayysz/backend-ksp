@@ -31,7 +31,6 @@ controller.getAll = async (req, res, next) => {
             offset: offside,
             limit,
             order: [ ['id', 'ASC'] ],
-            
         }
 
         const totalRows = await simpan.count(config1);

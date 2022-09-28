@@ -235,4 +235,25 @@ controller.getAcc = async (req, res, next) => {
     }
 };
 
+// get info account pegawai
+controller.info = async (req, res, next) => {
+    try {
+
+        const email = req.user.data.email;
+
+        const data = await pegawai.findOne({where: {email}});
+
+        if(!data) throw {statusCode: 400, message: 'Data pegawai tidak ditemukan silahkan daftar'}
+
+        return res.status(200).json({
+            status: 'Success',
+            message: 'Data pegawai ditemukan',
+            data
+        })
+
+    } catch (e) {
+        next(e)
+    }
+}
+
 module.exports = controller;

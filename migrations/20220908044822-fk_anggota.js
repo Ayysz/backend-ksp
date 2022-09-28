@@ -22,18 +22,12 @@ module.exports = {
       onDelete: 'CASCADE'
     });
 
-    // // add foreign key column bank_id table m_anggota
-    // await queryInterface.addConstraint('m_anggota', {
-    //   fields: ['bank_id'],
-    //   type: 'FOREIGN KEY',
-    //   name: 'FK_bank_id_anggota',
-    //   references: {
-    //     table: 'm_bank',
-    //     field: 'id',
-    //   },
-    //   onUpdate: 'CASCADE',
-    //   onDelete: 'CASCADE'
-    // });
+    // add unique key column email table m_akun
+    await queryInterface.addConstraint('m_anggota', {
+      fields: ['email'],
+      type: 'UNIQUE',
+      name: 'unique_email'
+    });
 
     // add foreign key column email table m_anggota
     await queryInterface.addConstraint('m_anggota', {

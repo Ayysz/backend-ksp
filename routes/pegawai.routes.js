@@ -15,6 +15,9 @@ router.route('/:id')
     .put(authenticate, Authorization.memberOnly, controller.pegawai.edit)
     .delete(authenticate, Authorization.staffOnly, controller.pegawai.destroy);
 
+router.get('/data', authenticate, Authorization.staffOnly, controller.pegawai.info);
+
+
 router.use('/pegawai', router);
 
 module.exports = router;

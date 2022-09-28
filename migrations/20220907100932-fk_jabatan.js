@@ -36,6 +36,13 @@ module.exports = {
       onDelete: 'CASCADE'
     });
 
+
+    // add unique key column email table m_akun
+    await queryInterface.addConstraint('m_pegawai', {
+      fields: ['email'],
+      type: 'UNIQUE',
+      name: 'unique_email'
+    });
   },
 
   async down (queryInterface, Sequelize) {
