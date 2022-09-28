@@ -2,6 +2,7 @@
 
 const { Op } = require('sequelize');
 const { errRes } = require('../helper/helper');
+const { faker } = require('@faker-js/faker');
 const Models = require('../models');
 const jabatan = Models.m_jabatan;
 const akun = Models.m_akun;
@@ -80,7 +81,6 @@ controller.post = async (req, res, next) => {
         
         // mengambil data dari req.body
         const {
-            no_pegawai,
             nama,
             no_hp,
             no_ktp,
@@ -93,7 +93,7 @@ controller.post = async (req, res, next) => {
         } = req.body;
 
         const reqData = {
-            no_pegawai,
+            no_pegawai: faker.datatype.uuid(),
             nama,
             no_hp,
             no_ktp,

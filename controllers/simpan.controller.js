@@ -224,7 +224,7 @@ controller.destroy = async (req, res, next) => {
             return res.status(200).json({
                 status: 'Success',
                 message: 'Berhasil delete data pada database dan folder',
-                id_transaksi: id
+                id_simpanan: id
             })
         }
 
