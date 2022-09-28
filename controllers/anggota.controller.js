@@ -227,4 +227,25 @@ controller.destroy = async (req, res, next) => {
     }
 };
 
+// get info account data
+controller.info = async (req, res, next) => {
+    try {
+
+        const email = req.user.data.email;
+
+        const data = await anggota.findOne({where: {email}});
+
+        if(!data) throw {statusCode: 400, message: 'Data anggota tidak ditemukan silahkan daftar'}
+
+        return res.status(200).json({
+            status: 'Success',
+            message: 'Data anggota ditemuka',
+            data
+        })
+
+    } catch (e) {
+        next(e)
+    }
+}
+
 module.exports = controller;
