@@ -12,7 +12,7 @@ router.route('/')
 router.get('/info', authenticate, Authorization.memberOnly, controller.anggota.info)
     
 router.route('/:id')
-    .put(authenticate, Authorization.staffOnly, controller.anggota.edit)
+    .put(authenticate, Authorization.memberOnly, controller.anggota.edit)
     .delete(authenticate, Authorization.adminOnly, controller.anggota.destroy);
 
 router.use('/anggota', router);
