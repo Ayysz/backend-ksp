@@ -9,6 +9,7 @@ const pinjam = Models.t_pinjam;
 const permohonan = Models.t_permohonan;
 const attachment = Models.t_attachment;
 const { dltFile } = require('../helper/fileDelete');
+const { number } = require('../helper/helper');
 const controller = {};
 
 // getAll data pinjaman
@@ -73,9 +74,10 @@ controller.post = async (req, res, next) => {
         }
 
         const User = data.dataValues.nama;
+        const no_pinjam = await number(pinjam, 'P');
 
         const reqData = {
-            no_pinjam: faker.datatype.uuid(),
+            no_pinjam,
             anggota_id: parseInt(data.dataValues.id),
             jumlah: req.body.jumlah,
             tujuan: req.body.tujuan,

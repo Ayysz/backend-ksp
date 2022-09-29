@@ -1,7 +1,7 @@
 'use strict'
 
 const { Op } = require('sequelize');
-const { errRes } = require('../helper/helper');
+const { errRes, number } = require('../helper/helper');
 const { faker } = require('@faker-js/faker');
 const Models = require('../models');
 const jabatan = Models.m_jabatan;
@@ -78,6 +78,7 @@ controller.post = async (req, res, next) => {
         // mengambil data dari cookie
         const User = req.user.data;
         const emailUser = User.email;
+        const no_pegawai = await number(pegawai, 'E');
         
         // mengambil data dari req.body
         const {
@@ -93,7 +94,7 @@ controller.post = async (req, res, next) => {
         } = req.body;
 
         const reqData = {
-            no_pegawai: faker.datatype.uuid(),
+            no_pegawai,
             nama,
             no_hp,
             no_ktp,
@@ -130,7 +131,6 @@ controller.edit = async (req, res, next) => {
 
         // mengambil data dari req.body
         const reqData = {
-            no_pegawai: req.body.no_pegawai,
             nama: req.body.nama,
             no_hp: req.body.no_hp,
             no_ktp: req.body.no_ktp,

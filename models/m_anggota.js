@@ -36,7 +36,7 @@ module.exports = (sequelize, DataTypes) => {
   }
   m_anggota.init({
     no_anggota: {
-      type: DataTypes.UUID,
+      type: DataTypes.STRING(13),
       allowNull: false,
       validate: {
         notEmpty: true,

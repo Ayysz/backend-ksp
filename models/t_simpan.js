@@ -18,12 +18,11 @@ module.exports = (sequelize, DataTypes) => {
   }
   t_simpan.init({
     no_simpan: {
-      type: DataTypes.UUID,
+      type: DataTypes.STRING(13),
       allowNull: false,
       validate: {
         notEmpty: true,
         notNull: true,
-        isUUID: 4
       }
     },
     tanggal_simpan: DataTypes.DATEONLY,

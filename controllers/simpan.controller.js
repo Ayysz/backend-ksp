@@ -9,6 +9,7 @@ const simpan = Models.t_simpan;
 const anggota = Models.m_anggota;
 const attachment = Models.t_attachment;
 const { dltFile } = require('../helper/fileDelete');
+const { number } = require('../helper/helper');
 const controller = {};
 
 // getAll data simpanan
@@ -73,12 +74,14 @@ controller.post = async (req, res, next) => {
         }
 
         const User = data.dataValues.nama;
+        const no_simpan = await number(simpan, 'S');
 
         const reqData = {
-            no_simpan: faker.datatype.uuid(),
+            no_simpan,
             tanggal_simpan: req.body.tanggal_simpan || d.toLocaleDateString('en-CA'),
             anggota_id: parseInt(data.dataValues.id),
             jumlah: parseFloat(req.body.jumlah),
+            total: parseFloat(req.body.total),
             jenis_simpan_id: req.body.jenis_simpan_id,
             created_by: User,
             updated_by: User
@@ -140,7 +143,8 @@ controller.edit = async (req, res, next) => {
 
     const reqData = {
         tanggal_simpan: req.body.tanggal_simpan || d.toLocaleDateString('en-CA'),
-        jumlah: req.body.jumlah,
+        jumlah: parseFloat(req.body.jumlah),
+        total: parseFloat(req.body.total),
         is_done: req.body.is_done || 0,
         updated_by: User
     };

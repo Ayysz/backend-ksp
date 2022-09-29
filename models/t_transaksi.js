@@ -25,12 +25,11 @@ module.exports = (sequelize, DataTypes) => {
   }
   t_transaksi.init({
     no_transaksi: {
-      type: DataTypes.UUID,
+      type: DataTypes.STRING(13),
       allowNull: false,
       validate: {
         notEmpty: true,
         notNull: true,
-        isUUID: 4
       }
     },
     anggota_id: {

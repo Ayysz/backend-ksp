@@ -23,7 +23,7 @@ module.exports = (sequelize, DataTypes) => {
   }
   m_pegawai.init({
     no_pegawai: {
-      type: DataTypes.UUID,
+      type: DataTypes.STRING(13),
       allowNull: false,
       validate: {
         notEmpty: true,

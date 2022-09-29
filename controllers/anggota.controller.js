@@ -1,6 +1,7 @@
 'use strict'
 
 const { faker } = require('@faker-js/faker');
+const { number } = require('../helper/helper');
 const { Op } = require('sequelize');
 const Models = require('../models');
 const akun = Models.m_akun;
@@ -79,22 +80,9 @@ controller.getAll = async (req, res, next) => {
                 {
                     model: bank,
                     as: 'bank',
-                    attributes: {
-                        exclude: [
-                            'id',
-                            'anggota_id',
-                            'jenis_kepemilikan_id',
-                            'nama_bank_id'
-                        ]
-                    },
                     include: {
                         model: namaBank,
                         as: 'namaBank',
-                        attributes: {
-                            exclude: [
-                                'id',
-                            ]
-                        }
                     },
                 },
             ]
@@ -132,8 +120,10 @@ controller.post = async (req, res, next) => {
         // generate automate no_anggota
         const count = await anggota.count();
         
+        const no_anggota = await number(anggota, 'A');
+
         const reqData = {
-            no_anggota: req.body.no_anggota || faker.datatype.uuid(),
+            no_anggota,
             nama: req.body.nama,
             no_ktp: req.body.no_ktp,
             no_hp: req.body.no_hp,

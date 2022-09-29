@@ -2,11 +2,7 @@
 
 const d = new Date();
 const Models = require('../models');
-// const pinjam = Models.t_pinjam
-// const anggota = Models.m_anggota
-// const t_permohonan = Models.t_transaksi
-// const simpan = Models.t_simpan
-// const pegawai = Models.m_pegawai
+const { faker } = require('@faker-js/faker');
 
 const condition = {
     1: {
@@ -44,8 +40,13 @@ exports.checker = (cond) => {
 
 // generate auto number
 exports.number = async (model, code = 'KSP') => {
-    // const counts = await Models.model.countAll();
-    const day = d.getDay();
-    const month = d.getMonth();
-    const year = d.getFullYear();
+    const count = await model.count();   
+    console.log(count);
+    const pad = count.toString().padStart(3, '0');
+    const first = pad.padStart(4, code);
+    const full = d.toLocaleDateString('en-CA').split('-').join('').slice(2,10)
+    const unique = faker.datatype.uuid().split('-')[0].slice(0,3);
+    const result = full.concat(unique).concat(first);
+    console.log(result)
+    return result;
 };

@@ -9,7 +9,7 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       no_simpan: {
-        type: Sequelize.UUID
+        type: Sequelize.STRING(13)
       },
       tanggal_simpan: {
         type: Sequelize.DATEONLY

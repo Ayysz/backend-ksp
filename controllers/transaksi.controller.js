@@ -10,6 +10,7 @@ const attachment = Models.t_attachment;
 const anggota = Models.m_anggota;
 const controller = {};
 const { dltFile } = require('../helper/fileDelete');
+const { number } = require('../helper/helper');
 
 // getAll data transaksi
 controller.getAll = async (req, res, next) => {
@@ -87,11 +88,12 @@ controller.post = async (req, res, next) => {
         }
         
         console.log(data)
-        const User = data.dataValues.nama; 
+        const User = data.dataValues.nama;
+        const no_transaksi = number(transaksi, 'T'); 
         
         // get data for post
         const reqData = {
-            no_transaksi: faker.datatype.uuid(),
+            no_transaksi,
             anggota_id: parseInt(data.dataValues.id),
             jenis_transaksi_id: parseInt(req.body.jenis_transaksi_id),
             bank_id: parseInt(req.body.bank_id),

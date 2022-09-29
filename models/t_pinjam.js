@@ -18,12 +18,11 @@ module.exports = (sequelize, DataTypes) => {
   }
   t_pinjam.init({
     no_pinjam: {
-      type: DataTypes.UUID,
+      type: DataTypes.STRING(13),
       allowNull: false,
       validate: {
         notEmpty: true,
         notNull: true,
-        isUUID: 4
       }
     },
     anggota_id: {

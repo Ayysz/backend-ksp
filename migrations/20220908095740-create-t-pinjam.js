@@ -9,7 +9,7 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       no_pinjam: {
-        type: Sequelize.UUID
+        type: Sequelize.STRING(13)
       },
       anggota_id: {
         type: Sequelize.INTEGER
