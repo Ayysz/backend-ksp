@@ -26,6 +26,10 @@ module.exports = {
       tanggal_pengembalian: {
         type: Sequelize.DATEONLY,
       },
+      is_done: {
+        defaultValue: 0,
+        type: Sequelize.BOOLEAN
+      },
       is_active: {
         defaultValue: 1,
         type: Sequelize.BOOLEAN

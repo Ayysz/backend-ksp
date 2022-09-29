@@ -32,11 +32,12 @@ module.exports = (sequelize, DataTypes) => {
         model: 'm_anggota',
         key: 'id'
       }
-    },
+  },
     jumlah: DataTypes.DOUBLE,
     tujuan: DataTypes.TEXT,
     tanggal_pinjam: DataTypes.DATEONLY,
     tanggal_pengembalian: DataTypes.DATEONLY,
+    is_done: DataTypes.BOOLEAN,
     is_active: DataTypes.BOOLEAN,
     created_by: DataTypes.STRING,
     updated_by: DataTypes.STRING,

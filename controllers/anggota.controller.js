@@ -47,8 +47,8 @@ controller.getAll = async (req, res, next) => {
         }else{
             conf = {
                 [Op.or]: [
-                    {jenis_kepemilikan_id: {[Op.like]: `%${search}%`}},
-                    {nama_pemilik_bank: {[Op.like]: `%${search}%`}}
+                    {no_anggota: {[Op.like]: `%${search}%`}},
+                    {nama: {[Op.like]: `%${search}%`}}
                 ]
             }
         }
