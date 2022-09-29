@@ -13,19 +13,19 @@ module.exports = {
     */
    const data = [
     {
-      nama_bank: 'BACA',
+      nama_bank: 'BCA',
       is_active: 1,
       createdAt: new Date(),
       updatedAt: new Date()
     },
     {
-      nama_bank: 'BINI',
+      nama_bank: 'BNI',
       is_active: 1,
       createdAt: new Date(),
       updatedAt: new Date()
     },
     {
-      nama_bank: 'SBI',
+      nama_bank: 'BSI',
       is_active: 1,
       createdAt: new Date(),
       updatedAt: new Date()

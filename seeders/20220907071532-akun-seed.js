@@ -19,13 +19,11 @@ module.exports = {
       'admin@gmail.com',
       'test@gmail.com',
       'dummy@gmail.com',
-      'pokemon@gmail.com'
      ];
      const password = [
       'admin123',
       'test123',
       'dummyyum13',
-      'laland666'
      ];
      const data = [];
 

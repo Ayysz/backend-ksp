@@ -1,6 +1,6 @@
 'use strict';
 const {faker}  = require('@faker-js/faker');
-const Models = require('../models');
+const Models = require('../../models');
 const m_pekerjaan = Models.m_pekerjaan;
 
 module.exports = {
