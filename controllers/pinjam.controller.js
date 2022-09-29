@@ -40,11 +40,11 @@ controller.getAll = async (req, res, next) => {
         const result = await pinjam.findAll(config2);
         
         if(result.length === 0){
-            throw {statusCode: 400, message: 'Data simpanan tidak ditemukan'}
+            throw {statusCode: 400, message: 'Data pinjaman tidak ditemukan'}
         }
         return res.status(200).json({
             status: 'Success',
-            message: 'Data simpanan ditemukan',
+            message: 'Data pinjaman ditemukan',
             page: page,
             limit: limit,
             totalRows: totalRows,
@@ -53,7 +53,7 @@ controller.getAll = async (req, res, next) => {
         });
 
     } catch (e) {
-        
+        next(e)
     }
 };
 
@@ -100,14 +100,14 @@ controller.post = async (req, res, next) => {
 
         if(!result){
             if(req.file?.file_name) await dltFile(req.file.filename);
-            throw {statusCode: 400, message: 'Gagal membuat transaksi baru'}
+            throw {statusCode: 400, message: 'Gagal membuat pinjaman baru'}
         }
 
         await transaction.commit();
 
         return res.status(201).json({
             status: 'Success',
-            message: 'Berhasil menambah simpanan baru',
+            message: 'Berhasil menambah pinjaman baru',
             data: result.dataValues
         })
 

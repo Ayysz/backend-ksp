@@ -13,6 +13,6 @@ router.route('/:id')
     .put(authenticate, Authorization.memberOnly, upload.single('file'), controller.pinjam.edit)
     .delete(authenticate, Authorization.memberOnly, controller.pinjam.destroy);
 
-router.use('/simpan', router);
+router.use('/pinjam', router);
 
-module.exports = router;
+module.exports = router;    

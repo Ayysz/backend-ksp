@@ -5,6 +5,7 @@ const { errRes, number } = require('../helper/helper');
 const { faker } = require('@faker-js/faker');
 const Models = require('../models');
 const jabatan = Models.m_jabatan;
+const role = Models.m_role;
 const akun = Models.m_akun;
 const pegawai = Models.m_pegawai;
 const controller = {};
@@ -41,7 +42,7 @@ controller.getAll = async (req, res, next) => {
                         'updatedAt',
                         'is_active'
                     ]
-                }
+                },
             }
         }
 
@@ -199,6 +200,17 @@ controller.getAcc = async (req, res, next) => {
                         role_id: {
                             [Op.between]: [1,3]
                         }    
+                    },
+                    include: {
+                        model: role,
+                        attributes: {
+                            exclude: [
+                                'id',
+                                'createdAt', 
+                                'updatedAt',
+                                'is_active'
+                            ]
+                        }
                     }
                 },
                 {
@@ -244,7 +256,7 @@ controller.info = async (req, res, next) => {
         const data = await pegawai.findOne({
             where: {email},
             include: {
-                model: jabatan
+                model: jabatan,
             }
         });
 
