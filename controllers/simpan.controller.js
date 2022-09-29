@@ -4,7 +4,7 @@ const d = new Date();
 const { faker } = require('@faker-js/faker');
 const { Op } = require('sequelize');
 const Models = require('../models');
-const sequelize = Models.sequelize
+const sequelize = Models.sequelize;
 const simpan = Models.t_simpan;
 const anggota = Models.m_anggota;
 const attachment = Models.t_attachment;
@@ -63,7 +63,7 @@ controller.post = async (req, res, next) => {
     try {
         
         transaction = await sequelize.transaction();
-
+        
         const email = req.user.data.email;
         const data = await anggota.findOne({ where: {email} });
 
@@ -80,7 +80,7 @@ controller.post = async (req, res, next) => {
             no_simpan,
             tanggal_simpan: req.body.tanggal_simpan || d.toLocaleDateString('en-CA'),
             anggota_id: parseInt(data.dataValues.id),
-            jumlah: parseFloat(req.body.jumlah),
+            jumlah: parseFloat(req.body.jumlah) || null,
             total: parseFloat(req.body.total),
             jenis_simpan_id: req.body.jenis_simpan_id,
             created_by: User,

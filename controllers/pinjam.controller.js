@@ -6,6 +6,7 @@ const { Op } = require('sequelize');
 const Models = require('../models');
 const sequelize = Models.sequelize;
 const pinjam = Models.t_pinjam;
+const anggota = Models.m_anggota;
 const permohonan = Models.t_permohonan;
 const attachment = Models.t_attachment;
 const { dltFile } = require('../helper/fileDelete');

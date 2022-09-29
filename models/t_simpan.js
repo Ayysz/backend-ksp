@@ -14,6 +14,11 @@ module.exports = (sequelize, DataTypes) => {
       t_simpan.hasOne(models.m_jenis_simpanan, {
         foreignKey: 'jenis_simpanan_id'
       });
+
+      t_simpan.belongsTo(models.m_anggota, {
+        foreignKey: 'anggota_id',
+        as: 'anggota'
+      })
     }
   }
   t_simpan.init({
@@ -27,7 +32,13 @@ module.exports = (sequelize, DataTypes) => {
     },
     tanggal_simpan: DataTypes.DATEONLY,
     jangka_simpan: DataTypes.DATEONLY,
-    anggota_id: DataTypes.INTEGER,
+    anggota_id: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: 'm_anggota',
+        key: 'id'
+      }
+    },
     total: {
       type: DataTypes.DOUBLE,
       allowNull: false

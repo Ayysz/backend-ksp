@@ -104,7 +104,7 @@ controller.post = async (req, res, next) => {
             tempat_lahir,
             alamat,
             email: email || emailUser,
-            jabatan_id: jabatan_id || 1,
+            jabatan_id: null,
         };
 
         const result = await pegawai.create(reqData);
@@ -128,7 +128,7 @@ controller.edit = async (req, res, next) => {
     try {
         
         // mengambil id dari parameter
-        const id = req.params.id;
+        const {id} = req.params;
 
         // mengambil data dari req.body
         const reqData = {

@@ -6,7 +6,7 @@ const {Authorization, authenticate} = require('../routes/login.routes');
 
 router.route('/')
     .get(controller.jabatan.getAll)
-    .post(authenticate, Authorization.staffOnly, controller.jabatan.post)
+    .post(authenticate, Authorization.leaderOnly, controller.jabatan.post)
 
 router.route('/:id')
     .put(authenticate, Authorization.leaderOnly, controller.jabatan.edit)

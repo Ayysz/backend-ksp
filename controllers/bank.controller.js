@@ -82,8 +82,7 @@ controller.getAll = async (req, res, next) => {
         // mencari data
         const result = await bank.findAll(config2);
 
-        console.log(result);
-        if(result.length === 0) throw {statusCode: 400, message: 'Data bank tidak ditemukan', data: 0};
+        if(!result) throw {statusCode: 400, message: 'Data bank tidak ditemukan'};
 
         return res.status(200)
             .json({

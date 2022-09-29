@@ -28,10 +28,10 @@ module.exports = (sequelize, DataTypes) => {
       validate: {
         notEmpty: true,
         notNull: true,
-        // len: {
-        //   msg: 'Masukan maksimal 13 digit angka',
-        //   args: [1,13],
-        // }
+        len: {
+          msg: 'Masukan maksimal 13 digit angka',
+          args: [1,13],
+        }
       }
     },
     nama: {

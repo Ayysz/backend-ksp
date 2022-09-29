@@ -87,9 +87,9 @@ controller.post = async (req, res, next) => {
             throw {statusCode: 400, message: 'anggota tidak ditemukan, silahkan daftar terlebih dahulu'}
         }
         
-        console.log(data)
+        // console.log(data)
         const User = data.dataValues.nama;
-        const no_transaksi = number(transaksi, 'T'); 
+        const no_transaksi = await number(transaksi, 'T'); 
         
         // get data for post
         const reqData = {
@@ -116,7 +116,7 @@ controller.post = async (req, res, next) => {
         
         
         if(!result) {
-            if(req.file?.file_name) await dltFile(req.file.filename);
+            if(req.file?.filename) await dltFile(req.file.filename);
             throw {statusCode: 400, message: 'Gagal menambah transaksi baru'}
         }
 
