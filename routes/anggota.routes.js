@@ -5,7 +5,7 @@ const controller = require('../controllers');
 const { authenticate, Authorization } = require('./login.routes');
 
 router.route('/')
-    .get(authenticate, Authorization.staffOnly, controller.anggota.getAll)
+    .get(authenticate, Authorization.memberOnly, controller.anggota.getAll)
     .post(authenticate, Authorization.memberOnly, controller.anggota.post);
 
 router.get('/info', authenticate, Authorization.memberOnly, controller.anggota.info)

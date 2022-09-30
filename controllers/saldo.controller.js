@@ -93,7 +93,7 @@ controller.totalSaldo = async (req, res, next) => {
         
         let param = '';
         if(req.query?.id){
-            param = `WHERE anggota_id = ${id.query.id}`
+            param = `WHERE anggota_id = ${req.query.id}`
         }
 
         const [saldoSimpanan] = await query('saldo_simpanan', param);
@@ -103,11 +103,22 @@ controller.totalSaldo = async (req, res, next) => {
         console.log(saldoPenarikan);
         console.log(saldoPengembalian);
 
+        console.log(saldoSimpanan.jumlah)
+        console.log(saldoPengembalian?.jumlah ?? 0);
+        console.log(saldoPenarikan?.jumlah ?? 0);
+        console.log(saldoPengembalian?.jumlah ?? 0 - saldoPenarikan?.jumlah ?? 0)
+
+        const data = {
+            anggota_id: req.query.id ?? '',
+            saldo: parseInt(saldoSimpanan.jumlah) + ((saldoPengembalian?.jumlah ?? 0 - saldoPenarikan?.jumlah ?? 0) ?? 0)
+        }
+
         // if(!daa) throw {statusCode: 400, message: 'Data saldo tidak ditemukan'}
 
         return res.status(200).json({
             status: 'Success',
-            message: `Data saldo kamu ${req.query.id?? ''}`,
+            message: `Data saldo kamu ${req.query.id ?? ''}`,
+            data
         })
 
     } catch (e) {
