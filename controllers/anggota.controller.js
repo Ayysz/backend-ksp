@@ -4,6 +4,7 @@ const { faker } = require('@faker-js/faker');
 const { number } = require('../helper/helper');
 const { Op } = require('sequelize');
 const Models = require('../models');
+const sequelize = Models.sequelize;
 const akun = Models.m_akun;
 const anggota = Models.m_anggota;
 const pekerjaan = Models.m_pekerjaan;
@@ -115,8 +116,10 @@ controller.getAll = async (req, res, next) => {
 
 // post data anggota
 controller.post = async (req, res, next) => {
+    let transaction;
     try {
         
+        transaction = await sequelize.transaction();
         // generate automate no_anggota
         const count = await anggota.count();
         
@@ -136,11 +139,14 @@ controller.post = async (req, res, next) => {
             bank_id: req.body.bank_id || 1,
         };
 
-        const result = await anggota.create(reqData);
+        const result = await anggota.create(reqData, {transaction});
 
         if(!result._options.isNewRecord){
             throw {statusCode: 400, message: 'Gagal menambah data'}
         };
+
+        await transaction.commit();
+
         return res.status(201)
         .json({
             status: 'Success',
@@ -149,14 +155,20 @@ controller.post = async (req, res, next) => {
         });
 
     } catch (e) {
-        next(e)
+        if(transaction){
+            await transaction.rollback();
+            next(e)
+        }
     }
 };
 
 // edit data anggota
 controller.edit = async (req, res, next) => {
+    let transaction;
     try {
         
+        transaction = await sequelize.transaction();
+
         const {id} = req.params;
 
         // cek apakah staff atau bukan
@@ -184,6 +196,8 @@ controller.edit = async (req, res, next) => {
         if(!updatedRows){
             throw {statusCode: 400, message:'Data gagal di update, masukan id yang sesuai'}
         }
+
+        await transaction.commit();
         return res.status(200)
             .json({
                 status: 'Success',
@@ -193,18 +207,28 @@ controller.edit = async (req, res, next) => {
             })
 
     } catch (e) {
-        next(e)
+        if(transaction){
+            await transaction.rollback();
+            next(e)
+        }
     }
 };
 
 // delete data anggota
 controller.destroy = async (req, res, next) => {
+    let transaction;
     try {
+        
+        transaction = await sequelize.transaction();
+        
         const {id} = req.params;
-
+        
         const result = !!await anggota.destroy({where:{id}});
 
         if(!result) throw {statusCode: 400, message: 'Gagal delete data anggota'};
+        
+        await transaction.commit();
+
         return res.status(200).json({
             status: 'Success',
             message: 'Berhasil delete data anggota',
@@ -212,7 +236,10 @@ controller.destroy = async (req, res, next) => {
         });
 
     } catch (e) {
-        next(e)
+        if(transaction){
+            await transaction.rollback();
+            next(e)
+        }
     }
 };
 

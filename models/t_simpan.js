@@ -31,7 +31,7 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
     tanggal_simpan: DataTypes.DATEONLY,
-    jangka_simpan: DataTypes.DATEONLY,
+    jangka_simpan: DataTypes.STRING,
     anggota_id: {
       type: DataTypes.INTEGER,
       references: {
@@ -39,11 +39,11 @@ module.exports = (sequelize, DataTypes) => {
         key: 'id'
       }
     },
-    total: {
+    jumlah: {
       type: DataTypes.DOUBLE,
       allowNull: false
     },
-    jumlah: DataTypes.DOUBLE,
+    total: DataTypes.DOUBLE, //total untuk simpanan berjangka 
     jenis_simpanan_id: {
       type:DataTypes.INTEGER,
       references: {
@@ -68,11 +68,11 @@ module.exports = (sequelize, DataTypes) => {
 
   // add data values before update
   t_simpan.beforeUpdate(async (t_simpan, opt) => {
-    console.log(t_simpan.dataValues); // new values
-    console.log(t_simpan._previousDataValues); // current values
+    console.log(t_simpan?.dataValues); // new values
+    console.log(t_simpan?._previousDataValues); // current values
 
-    t_simpan.dataValues.jumlah += t_simpan.dataValues.jumlah;
-    return console.log(t_simpan.dataValues.jumlah += t_simpan.dataValues.jumlah)
+    t_simpan._previousDataValues.jumlah += t_simpan.dataValues.jumlah;
+    return console.log(t_simpan._previousDataValues.jumlah += t_simpan.dataValues.jumlah)
   });
 
   return t_simpan;

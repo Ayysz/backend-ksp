@@ -15,16 +15,16 @@ module.exports = {
         type: Sequelize.DATEONLY
       },
       jangka_simpan: {
-        type: Sequelize.DATEONLY
+        type: Sequelize.STRING
       },
       anggota_id: {
         type: Sequelize.INTEGER
       },
-      total: {
+      jumlah: {
         allowNull: false,
         type: Sequelize.DOUBLE
       },
-      jumlah: {
+      total: {
         type: Sequelize.DOUBLE
       },
       jenis_simpanan_id: {

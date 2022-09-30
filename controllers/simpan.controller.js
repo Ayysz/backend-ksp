@@ -79,10 +79,11 @@ controller.post = async (req, res, next) => {
         const reqData = {
             no_simpan,
             tanggal_simpan: req.body.tanggal_simpan || d.toLocaleDateString('en-CA'),
+            jangka_simpan: req.body.jangka_simpan,
             anggota_id: parseInt(data.dataValues.id),
-            jumlah: parseFloat(req.body.jumlah) || null,
-            total: parseFloat(req.body.total),
-            jenis_simpan_id: req.body.jenis_simpan_id,
+            jumlah: parseFloat(req.body.jumlah),
+            total: parseFloat(req.body.total) || null,
+            jenis_simpanan_id: req.body.jenis_simpanan_id || 4,
             created_by: User,
             updated_by: User
         };
@@ -99,7 +100,7 @@ controller.post = async (req, res, next) => {
         const savePhoto = await attachment.create(photo, {transaction});
 
         if(!result){
-            if(req.file?.file_name) await dltFile(req.file.filename);
+            if(req.file?.filename) await dltFile(req.file.filename);
             throw {statusCode: 400, message: 'Gagal membuat transaksi baru'}
         }
 
@@ -127,56 +128,54 @@ controller.edit = async (req, res, next) => {
         
         const {id} = req.params;
 
-        transaction = sequelize.transaction();
+        transaction = await sequelize.transaction();
 
-    const email = req.user.data.email;
-    const data = await anggota.findOne({
-        where: {email}
-    });
+        const email = req.user.data.email;
+        const data = await anggota.findOne({
+            where: {email}
+        });
 
-    if(!data){
-        if(req.file?.filename) await dltFile(req.file.filename);
-        throw {statusCode: 400, message: 'anggota tidak ditemukan silahkan daftar terlebih dahulu'}
-    }
+        if(!data){
+            if(req.file?.filename) await dltFile(req.file.filename);
+            throw {statusCode: 400, message: 'anggota tidak ditemukan silahkan daftar terlebih dahulu'}
+        }
 
-    const User = data.dataValues.nama;
+        const User = data.dataValues.nama;
 
-    const reqData = {
-        tanggal_simpan: req.body.tanggal_simpan || d.toLocaleDateString('en-CA'),
-        jumlah: parseFloat(req.body.jumlah),
-        total: parseFloat(req.body.total),
-        is_done: req.body.is_done || 0,
-        updated_by: User
-    };
+        const reqData = {
+            tanggal_simpan: req.body.tanggal_simpan || d.toLocaleDateString('en-CA'),
+            jumlah: parseFloat(req.body.jumlah),
+            is_done: req.body.is_done || 0,
+            updated_by: User
+        };
 
-    const result = await simpan.update(reqData, {where: {id}}, {transaction})
+        const [updatedRows] = await simpan.update(reqData, {where: {id}}, {transaction})
 
-    const photo = {
-        file_name: req.file.filename,
-        refrence_table: 'simpan',
-        refrence_id: result.dataValues.id,
-        anggota_id: reqData.anggota_id
-    }
+        const photo = {
+            file_name: req.file.filename,
+            refrence_table: 'simpan',
+            refrence_id: id,
+            anggota_id: data.dataValues.id
+        }
 
-    const savePhoto = await attachment.create(photo, {transaction});
+        const savePhoto = await attachment.create(photo, {transaction});
 
-    if(result.length === 0){
-        if(req.file?.file_name) await dltFile(req.file.filename);
-        throw {statusCode: 400, message: 'Gagal membuat simpanan baru'}
-    }
+        if(!updatedRows){
+            if(req.file?.file_name) await dltFile(req.file.filename);
+            throw {statusCode: 400, message: 'Gagal membuat simpanan baru'}
+        }
 
-    await transaction.commit();
+        await transaction.commit();
 
-    return res.status(201).json({
-        status: 'Success',
-        message: 'Berhasil menamabah simpanan baru',
-        data: result.dataValues
-    })
-    
+        return res.status(201).json({
+            status: 'Success',
+            message: 'Berhasil mengupdate simpanan',
+        })
+        
     } catch (e) {
         if(transaction){
             if(req.file?.filename) await dltFile(req.file.filename);
-            await transaction.rollback();
+            await transaction.rollback()
             next(e)
         }
     }

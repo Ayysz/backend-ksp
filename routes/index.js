@@ -12,6 +12,7 @@ const transaksiRoutes = require('./transaksi.routes');
 const simpanRoutes = require('./simpan.routes');
 const pinjamRoutes = require('./pinjam.routes');
 const permohonanRoutes = require('./permohonan.routes');
+const saldoRoutes = require('./saldo.routes');
 const miscRoutes = require('./misc.routes');
 
 router.use(authRoutes);
@@ -25,6 +26,7 @@ router.use(transaksiRoutes);
 router.use(simpanRoutes);
 router.use(pinjamRoutes);
 router.use(permohonanRoutes);
+router.use(saldoRoutes);
 router.use(miscRoutes);
 
 module.exports = router;

@@ -10,6 +10,7 @@ const simpanController = require('./simpan.controller');
 const pinjamController = require('./pinjam.controller');
 const permohonanController = require('./permohonan.controller');
 const miscController = require('./misc.controller');
+const saldoController = require('./saldo.controller'); 
 const controller = {};
 
 controller.auth = authController.controller;
@@ -23,6 +24,7 @@ controller.transaksi = transaksiController;
 controller.simpan = simpanController;
 controller.pinjam = pinjamController;
 controller.permohonan = permohonanController;
+controller.saldo = saldoController;
 controller.misc = miscController;
 
 module.exports = controller;
