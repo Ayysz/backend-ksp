@@ -19,12 +19,20 @@ controller.getAll = async (req, res, next) => {
         const limit = parseInt(req.query.limit) || 10;
         const search = req.query.search || "";
         const offside = limit * page;
+        const j = '';
+
+        if(req.query?.jangka){
+            j = {
+                jenis_simpanan_id: 4
+            }
+        }
 
         const config1 = {
             where: {
                 [Op.or]: [
                     {anggota_id: {[Op.like]: `%${search}%`}},
-                ]
+                ],
+                ...j
             }
         }
         const config2 = {
@@ -71,7 +79,8 @@ controller.post = async (req, res, next) => {
             where: {
                 [Op.and]: [
                     {anggota_id},
-                    {is_done: 0}
+                    {is_done: 0},
+                    {jenis_simpanan_id: 4}
                 ]
             }
         }
@@ -98,6 +107,7 @@ controller.post = async (req, res, next) => {
             jumlah: parseFloat(req.body.jumlah),
             total: parseFloat(req.body.total) || null,
             jenis_simpanan_id: req.body.jenis_simpanan_id || 4,
+            is_done: req.body.is_done || 0,
             created_by: User,
             updated_by: User
         };

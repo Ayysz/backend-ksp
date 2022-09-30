@@ -171,11 +171,6 @@ controller.edit = async (req, res, next) => {
         if(!srcData) throw {statusCode: 400, message: 'attachment tidak ditemukan'}
         console.log(srcData);
     
-        // remove file from src
-        // const status = !!await attachment.destroy({where: {refrence_id}, transaction});
-        
-        // if(!status) throw {statusCode: 400, message: 'Gagal mendelete file pada database'};
-
         // get data for edit
         const reqData = {
             jenis_transaksi_id: req.body.jenis_transaksi_id,
