@@ -115,23 +115,24 @@ controller.edit = async (req, res, next) => {
         const {nama, id} = data.dataValues;
 
         const cond = checker(req.body.cond);
-        console.log(checker);
+        console.log(cond);
+
+        const idEdit = req.params.id;
+        const oldData = await permohonan.findOne({where: {id: idEdit}});
+        const {pinjam_id, alasan} = oldData.dataValues;
 
         const reqData = {
-            pinjam_id: req.body.pinjam_id,
-            pimpinan_id: null,
-            staff_id: id,
-            tanggal_persetujuan: req.body.tanggal_persetujuan,
-            alasan: req.body.alasan,
+            pimpinan_id: id,
+            tanggal_persetujuan: req.body.tanggal_persetujuan || d.toLocaleDateString('en-ca'),
+            alasan: req.body.alasan || alasan,
             ...cond,
             updated_by: nama
         };
 
-        const idEdit = req.params.id;
         const [updatedRows] = await permohonan.update(reqData, { where: {id:idEdit} });
 
         // mengupdate pinjaman menjadi disetujui
-        if(req.body?.cond){
+        if(req.body?.cond === 4){
             const [updatedRows] = await pinjam.update({is_done: 1}, { where: { id: pinjam_id} })
             if(!updatedRows) throw {statusCode:400, message: 'Gagal mengupdate status pinjaman'};
         }
@@ -140,7 +141,7 @@ controller.edit = async (req, res, next) => {
 
         return res.status(200).json({
             status: 'Success',
-            message: 'Berhasil mengupdaate permohonan'
+            message: 'Berhasil mengupdate permohonan'
         })
 
     } catch (e) {

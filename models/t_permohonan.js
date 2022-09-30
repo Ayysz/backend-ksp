@@ -77,29 +77,29 @@ module.exports = (sequelize, DataTypes) => {
         
       });
       
-      // auto input to log permohonan after data update
-      t_permohonan.afterUpdate(async (data, opt) => {
-        const{
-          is_approve,
-          is_waiting
-        } = data;
-        const {
-          m_pegawai,
-          t_permohonan
-        } = sequelize.models;
-        let piece = await statusCheck( m_pegawai, data, is_approve,is_waiting, t_permohonan);
-        const result = await sequelize.models.t_pinjam.findOne({where: {id: data.pinjam_id}});
-        const no_pinjam = result.dataValues.no_pinjam;
-        const reqData ={
-          no_pinjam,
-          ...piece,
-          tanggal_permohonan: t_permohonan.tanggal_persetujuan,
-          updatedAt: new Date()
-        };   
-        
-        await sequelize.models.log_permohonan.create(reqData);
+    // auto input to log permohonan after data update
+    t_permohonan.afterUpdate(async (data, opt) => {
+      const{
+        is_approve,
+        is_waiting
+      } = data;
+      const {
+        m_pegawai,
+        t_permohonan
+      } = sequelize.models;
+      let piece = await statusCheck( m_pegawai, data, is_approve,is_waiting, t_permohonan);
+      const result = await sequelize.models.t_pinjam.findOne({where: {id: data.pinjam_id}});
+      const no_pinjam = result.dataValues.no_pinjam;
+      const reqData ={
+        no_pinjam,
+        ...piece,
+        tanggal_permohonan: t_permohonan.tanggal_persetujuan,
+        updatedAt: new Date()
+      };   
+      
+      await sequelize.models.log_permohonan.create(reqData);
 
-      })
+    })
   return t_permohonan;
 };
 

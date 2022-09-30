@@ -38,7 +38,7 @@ module.exports = (sequelize, DataTypes) => {
     pinjaman_id: {
       type: DataTypes.INTEGER,
       references: {
-        model: 't_pinjaman',
+        model: 't_pinjam',
         key: 'id'
       }
     },

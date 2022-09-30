@@ -164,7 +164,7 @@ controller.edit = async (req, res, next) => {
             updated_by: User
         };
 
-        const result = await pinjam.update(reqData, {where: {id}}, {transaction})
+        const result = await pinjam.update(reqData, {where: {id}, transaction})
 
         const photo = {
             file_name: req.file.filename,
@@ -222,7 +222,7 @@ controller.destroy = async (req, res, next) => {
         });
 
         // destroy data
-        const status1 = !!await attachment.destroy({where: {id: srcData.dataValues.id}}, {transaction});
+        const status1 = !!await attachment.destroy({where: {id: srcData.dataValues.id}, transaction});
         const status2 = !!await pinjam.destroy({where: {id}});
         const statusAll = {
             status1: status1,
