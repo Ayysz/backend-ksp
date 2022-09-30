@@ -6,13 +6,13 @@ const { authenticate, Authorization } = require('./login.routes');
 
 
 router.route('/')
-    .get(authenticate, Authorization.staffOnly, )
-    .post(authenticate, Authorization.memberOnly, controller.anggota.post);
+    .get(authenticate, Authorization.staffOnly, controller.permohonan.getAll)
+    .post(authenticate, Authorization.staffOnly, controller.permohonan.post);
 
 router.route('/:id')
-    .put(authenticate, Authorization.staffOnly, controller.anggota.edit)
-    .delete(authenticate, Authorization.adminOnly, controller.anggota.destroy);
+    .put(authenticate, Authorization.staffOnly, controller.permohonan.edit)
+    .delete(authenticate, Authorization.adminOnly, controller.permohonan.destroy);
 
-router.use('/anggota', router);
+router.use('/permohonan', router);
 
 module.exports = router;

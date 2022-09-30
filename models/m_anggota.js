@@ -26,7 +26,8 @@ module.exports = (sequelize, DataTypes) => {
       });
       
       m_anggota.hasMany(models.t_simpan, {
-        foreignKey: 'anggota_id'
+        foreignKey: 'anggota_id',
+        hooks: true
       });
       
       m_anggota.hasMany(models.t_pinjam, {

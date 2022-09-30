@@ -48,6 +48,17 @@ module.exports = {
       onUpdate: 'CASCADE',
       onDelete: 'CASCADE'
     });
+
+    // add foreign key column pinjaman_id table t_transaksi
+    await queryInterface.addConstraint('t_transaksi', {
+      fields: ['pinjaman_id'],
+      type: 'FOREIGN KEY',
+      name: 'FK_pinjaman_id_transaksi',
+      references: {
+        table: 't_pinjam',
+        field: 'id'
+      }
+    })
   },
 
   async down (queryInterface, Sequelize) {

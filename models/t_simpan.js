@@ -12,12 +12,14 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       t_simpan.hasOne(models.m_jenis_simpanan, {
-        foreignKey: 'jenis_simpanan_id'
+        foreignKey: 'jenis_simpanan_id',
+        hooks: true,
       });
 
       t_simpan.belongsTo(models.m_anggota, {
         foreignKey: 'anggota_id',
-        as: 'anggota'
+        as: 'anggota',
+        hooks: true,
       })
     }
   }
@@ -63,19 +65,21 @@ module.exports = (sequelize, DataTypes) => {
 
   // create log_simpan after input
   t_simpan.afterCreate(async (t_simpan, opt) => {
+    console.log('Nambahin log simpanan nich')
+  });
+
+  t_simpan.afterUpdate(async (t_simpan, opt) => {
 
   });
 
   // add data values before update
   t_simpan.beforeUpdate(async (t_simpan, opt) => {
     let stat = 0;
-    const {id, total} = t_simpan;
-    const old = await sequelize.model.t_simpan.findOne({where: {id}});
-    const data = t_simpan.jumlah + parseFloat(old.dataValues.jumlah);
+    const {id, total, jumlah} = t_simpan;
+    const old = await sequelize.models.t_simpan.findOne({where: {id}});
+    const data = parseFloat(jumlah) + parseFloat(old.dataValues.jumlah);
 
-    if (parseFloat(total) === data){
-      stat = 1
-    }
+    if ( parseFloat(total) === parseFloat(data) ) stat = 1;
 
     return t_simpan.jumlah = data, 
             t_simpan.is_done = stat;

@@ -163,8 +163,12 @@ controller.edit = async (req, res, next) => {
             jumlah: parseFloat(req.body.jumlah),
             updated_by: User
         };
-
-        const [updatedRows] = await simpan.update(reqData, {where: {id}}, {transaction})
+        const conf = {
+            where: {id},
+            transaction, 
+            individualHooks: true
+        };
+        const [updatedRows] = await simpan.update(reqData, conf)
 
         const photo = {
             file_name: req.file.filename,

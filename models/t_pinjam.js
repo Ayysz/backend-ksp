@@ -14,6 +14,9 @@ module.exports = (sequelize, DataTypes) => {
       t_pinjam.belongsTo(models.m_anggota, {
         foreignKey: 'anggota_id'
       });
+      t_pinjam.hasOne(models.t_transaksi, {
+        foreignKey: 'pinjaman_id'
+      })
     }
   }
   t_pinjam.init({

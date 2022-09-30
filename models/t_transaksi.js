@@ -21,6 +21,9 @@ module.exports = (sequelize, DataTypes) => {
       t_transaksi.belongsTo(models.m_bank, {
         foreignKey: 'bank_id'
       })
+      t_transaksi.belongsTo(models.t_pinjam, {
+        foreignKey: 'pinjaman_id'
+      })
     }
   }
   t_transaksi.init({
@@ -30,6 +33,13 @@ module.exports = (sequelize, DataTypes) => {
       validate: {
         notEmpty: true,
         notNull: true,
+      }
+    },
+    pinjaman_id: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: 't_pinjaman',
+        key: 'id'
       }
     },
     anggota_id: {

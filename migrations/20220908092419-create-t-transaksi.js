@@ -11,6 +11,9 @@ module.exports = {
       no_transaksi: {
         type: Sequelize.STRING(13)
       },
+      pinjaman_id: {
+        type: Sequelize.INTEGER
+      },
       anggota_id: {
         type: Sequelize.INTEGER
       },

@@ -39,9 +39,10 @@ controller.getAll = async (req, res, next) => {
 
         const result = await permohonan.findAll(config2);
         
-        if(result.length === 0){
+        if(!result){
             throw {statusCode: 400, message: 'Data permohonan tidak ditemukan'}
         }
+
         return res.status(200).json({
             status: 'Success',
             message: 'Data permohonan ditemukan',
@@ -73,13 +74,13 @@ controller.post = async (req, res, next) => {
         if(!data) throw {statusCode: 400, message: 'anggota tidak ditemukan, silahkan daftar terlebih dahulu'}
         
         const {nama, id} = data.dataValues;
-        const cond = checker(1)
+        const cond = checker(parseInt(req.body.cond));
 
         const reqData = {
             pinjam_id: req.body.pinjam_id,
             pimpinan_id: null,
             staff_id: id,
-            tanggal_persetujuan: req.body.tanggal_persetujuan,
+            tanggal_persetujuan: req.body.tanggal_persetujuan || d.toLocaleDateString('en-ca'),
             alasan: req.body.alasan,
             ...cond,
             created_by: nama,
