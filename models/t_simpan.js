@@ -68,11 +68,17 @@ module.exports = (sequelize, DataTypes) => {
 
   // add data values before update
   t_simpan.beforeUpdate(async (t_simpan, opt) => {
-    console.log(t_simpan?.dataValues); // new values
-    console.log(t_simpan?._previousDataValues); // current values
+    let stat = 0;
+    const {id, total} = t_simpan;
+    const old = await sequelize.model.t_simpan.findOne({where: {id}});
+    const data = t_simpan.jumlah + parseFloat(old.dataValues.jumlah);
 
-    t_simpan._previousDataValues.jumlah += t_simpan.dataValues.jumlah;
-    return console.log(t_simpan._previousDataValues.jumlah += t_simpan.dataValues.jumlah)
+    if (parseFloat(total) === data){
+      stat = 1
+    }
+
+    return t_simpan.jumlah = data, 
+            t_simpan.is_done = stat;
   });
 
   return t_simpan;

@@ -66,6 +66,20 @@ controller.post = async (req, res, next) => {
         
         const email = req.user.data.email;
         const data = await anggota.findOne({ where: {email} });
+        const anggota_id = parseInt(data.dataValues.id);
+        const conf = {
+            where: {
+                [Op.and]: [
+                    {anggota_id},
+                    {is_done: 0}
+                ]
+            }
+        }
+        const check = await simpan.findAll(conf);
+        if(check.length >= 1){
+            if(req.file?.filename) await dltFile(req.file.filename);
+            throw {statusCode: 400, message: 'selesaikan dulu pinjaman sebelumnya'}
+        }
 
         // console.log(req.file?.filename);
         if(!data){
@@ -80,7 +94,7 @@ controller.post = async (req, res, next) => {
             no_simpan,
             tanggal_simpan: req.body.tanggal_simpan || d.toLocaleDateString('en-CA'),
             jangka_simpan: req.body.jangka_simpan,
-            anggota_id: parseInt(data.dataValues.id),
+            anggota_id,
             jumlah: parseFloat(req.body.jumlah),
             total: parseFloat(req.body.total) || null,
             jenis_simpanan_id: req.body.jenis_simpanan_id || 4,
@@ -140,12 +154,13 @@ controller.edit = async (req, res, next) => {
             throw {statusCode: 400, message: 'anggota tidak ditemukan silahkan daftar terlebih dahulu'}
         }
 
+        // const old = await simpan.findOne({where: {id}});
+        // const jumlah = parseFloat(data.dataValues.jumlah) + parseFloat(req.body.jumlah);
         const User = data.dataValues.nama;
 
         const reqData = {
             tanggal_simpan: req.body.tanggal_simpan || d.toLocaleDateString('en-CA'),
             jumlah: parseFloat(req.body.jumlah),
-            is_done: req.body.is_done || 0,
             updated_by: User
         };
 

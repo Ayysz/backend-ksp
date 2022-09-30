@@ -99,21 +99,18 @@ controller.totalSaldo = async (req, res, next) => {
         const [saldoSimpanan] = await query('saldo_simpanan', param);
         const [saldoPenarikan] = await query('penarikan', param);
         const [saldoPengembalian] = await query('pengembalian', param);
-        console.log(saldoSimpanan.jumlah)
-        console.log(saldoPenarikan);
-        console.log(saldoPengembalian);
-
-        console.log(saldoSimpanan.jumlah)
-        console.log(saldoPengembalian?.jumlah ?? 0);
-        console.log(saldoPenarikan?.jumlah ?? 0);
-        console.log(saldoPengembalian?.jumlah ?? 0 - saldoPenarikan?.jumlah ?? 0)
 
         const data = {
             anggota_id: req.query.id ?? '',
-            saldo: parseInt(saldoSimpanan.jumlah) + ((saldoPengembalian?.jumlah ?? 0 - saldoPenarikan?.jumlah ?? 0) ?? 0)
+            saldo: parseFloat(saldoSimpanan.jumlah) + parseFloat(((saldoPengembalian?.jumlah ?? 0) - (saldoPenarikan?.jumlah ?? 0)) ?? 0)
         }
-
-        // if(!daa) throw {statusCode: 400, message: 'Data saldo tidak ditemukan'}
+        
+        if( !saldoSimpanan ??
+            !saldoPenarikan ??
+            !saldoPengembalian
+            ){
+                throw {statusCode: 400, message: 'Data saldo kosong'}
+            }
 
         return res.status(200).json({
             status: 'Success',

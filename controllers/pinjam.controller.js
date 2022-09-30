@@ -67,6 +67,20 @@ controller.post = async (req, res, next) => {
 
         const email = req.user.data.email;
         const data = await anggota.findOne({ where: {email} });
+        const anggota_id = parseInt(data.dataValues.id);
+        const conf = {
+            where: {
+                [Op.and]: [
+                    {anggota_id},
+                    {is_done: 0}
+                ]
+            }
+        }
+        const check = await pinjam.findAll(conf);
+        if(check.length >= 1){
+            if(req.file?.filename) await dltFile(req.file.filename);
+            throw {statusCode: 400, message: 'selesaikan dulu pinjaman sebelumnya'}
+        }
 
         // console.log(req.file?.filename);
         if(!data){
