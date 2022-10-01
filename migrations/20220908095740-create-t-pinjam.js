@@ -30,6 +30,10 @@ module.exports = {
         defaultValue: 0,
         type: Sequelize.BOOLEAN
       },
+      is_approve: {
+        defaultValue: 0,
+        type: Sequelize.BOOLEAN
+      },
       is_active: {
         defaultValue: 1,
         type: Sequelize.BOOLEAN

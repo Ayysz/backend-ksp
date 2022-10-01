@@ -25,7 +25,8 @@ controller.getAll = async (req, res, next) => {
             where: {
                 [Op.or]: [
                     {anggota_id: {[Op.like]: `%${search}%`}},
-                ]
+                ],
+                is_done: 1,
             }
         }
         const config2 = {

@@ -19,9 +19,9 @@ controller.getAll = async (req, res, next) => {
         const limit = parseInt(req.query.limit) || 10;
         const search = req.query.search || "";
         const offside = limit * page;
-        const j = '';
+        let j = {};
 
-        if(req.query?.jangka){
+        if(req.query?.filter === "j"){
             j = {
                 jenis_simpanan_id: 4
             }
@@ -41,13 +41,14 @@ controller.getAll = async (req, res, next) => {
             limit,
             order: [ ['id', 'ASC'] ],
         }
+        console.log(config1);
 
         const totalRows = await simpan.count(config1);
         const totalPages = Math.ceil(totalRows / limit);
 
         const result = await simpan.findAll(config2);
         
-        if(result.length === 0){
+        if(!result){
             throw {statusCode: 400, message: 'Data simpanan tidak ditemukan'}
         }
         return res.status(200).json({

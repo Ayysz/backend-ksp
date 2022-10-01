@@ -40,6 +40,7 @@ module.exports = (sequelize, DataTypes) => {
     tanggal_pinjam: DataTypes.DATEONLY,
     tanggal_pengembalian: DataTypes.DATEONLY,
     is_done: DataTypes.BOOLEAN,
+    is_approve: DataTypes.BOOLEAN,
     is_active: DataTypes.BOOLEAN,
     created_by: DataTypes.STRING,
     updated_by: DataTypes.STRING,
