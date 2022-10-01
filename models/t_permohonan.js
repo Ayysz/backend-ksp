@@ -79,6 +79,7 @@ module.exports = (sequelize, DataTypes) => {
       
     // auto input to log permohonan after data update
     t_permohonan.afterUpdate(async (data, opt) => {
+      console.log('update data coi')
       const{
         is_approve,
         is_waiting
@@ -87,14 +88,14 @@ module.exports = (sequelize, DataTypes) => {
         m_pegawai,
         t_permohonan
       } = sequelize.models;
-      let piece = await statusCheck( m_pegawai, data, is_approve,is_waiting, t_permohonan);
+      let piece = await statusCheck( m_pegawai, data, is_approve, is_waiting, t_permohonan);
       const result = await sequelize.models.t_pinjam.findOne({where: {id: data.pinjam_id}});
       const no_pinjam = result.dataValues.no_pinjam;
       const reqData ={
         no_pinjam,
         ...piece,
         tanggal_permohonan: t_permohonan.tanggal_persetujuan,
-        updatedAt: new Date()
+        createdAt: new Date()
       };   
       
       await sequelize.models.log_permohonan.create(reqData);
@@ -106,7 +107,7 @@ module.exports = (sequelize, DataTypes) => {
 const statusCheck = async (models, t_permohonan, isA, isW, models2) => {
   let nama_pegawai, data;
   switch(true){
-    case(isA === true && isW === false):
+    case(isW === true && isA === false):
       data = await findPegawai(models, t_permohonan.staff_id);
       nama_pegawai = data.dataValues.nama;
       return {
@@ -115,9 +116,9 @@ const statusCheck = async (models, t_permohonan, isA, isW, models2) => {
         nama_pegawai,
       };
     break;
-    case(isA === false && isW === false):
+    case(isW === false && isA === false):
       data = await findPegawai(models, t_permohonan.staff_id);
-      const update = await pinjamanApprove(models2. t_permohonan.pinjam_id);
+      const update = await pinjamanApprove(models2, t_permohonan.pinjam_id);
       nama_pegawai = data.dataValues.nama;
       return {
         status: 'disetujui',
@@ -125,7 +126,7 @@ const statusCheck = async (models, t_permohonan, isA, isW, models2) => {
         nama_pegawai
       };
     break;
-    case(isA === false && isW === true):
+    case(isW === false && isA === true):
       data = await findPegawai(models, t_permohonan.staff_id);
       nama_pegawai = data.dataValues.nama;
       return{
@@ -134,7 +135,7 @@ const statusCheck = async (models, t_permohonan, isA, isW, models2) => {
         nama_pegawai
       };
     break;
-    case(isA === true && isW === true):
+    case(isW === true && isA === true):
       data = await findPegawai(models, t_permohonan.staff_id);
       nama_pegawai = data.dataValues.nama;
       return{
@@ -166,7 +167,7 @@ const findPegawai = async(m,id) => {
 
 const pinjamanApprove = async (m, id) => {
   try {
-    const [updatedRows] = await m.update({is_done: 1},{where:{id}});
+    const [updatedRows] = await m.update({is_approve: 1},{where:{id}});
   } catch (e) {
     next(e)
   }

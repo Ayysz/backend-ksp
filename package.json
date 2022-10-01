@@ -4,7 +4,7 @@
   "description": "restAPI project koperasi simpan pinjam",
   "main": "index.js",
   "scripts": {
-    "demon": "nodemon --delay 1.3 app.js",
+    "dev": "nodemon --delay 1.3 app.js",
     "migration": "npx sequelize-cli db:create && npx sequelize-cli db:migrate",
     "test": "cross-env NODE_ENV=test jest --coverage --testTimeOut=8000 --detectOpenHandles --forceExit",
     "pretest": "cross-env NODE_ENV=test npm run db:reset",

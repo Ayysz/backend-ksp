@@ -43,7 +43,13 @@ module.exports = (sequelize, DataTypes) => {
     },
     jumlah: {
       type: DataTypes.DOUBLE,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        notEmpty: {
+          args: true,
+          msg: 'Masukan nilai jumlah'
+        }
+      }
     },
     total: DataTypes.DOUBLE, //total untuk simpanan berjangka 
     jenis_simpanan_id: {

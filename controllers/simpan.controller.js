@@ -19,11 +19,11 @@ controller.getAll = async (req, res, next) => {
         const limit = parseInt(req.query.limit) || 10;
         const search = req.query.search || "";
         const offside = limit * page;
-        let j = {};
+        let f = {};
 
-        if(req.query?.filter === "j"){
-            j = {
-                jenis_simpanan_id: 4
+        if(req.query?.filter){
+            f = {
+                jenis_simpanan_id: req.query.filter
             }
         }
 
@@ -32,7 +32,7 @@ controller.getAll = async (req, res, next) => {
                 [Op.or]: [
                     {anggota_id: {[Op.like]: `%${search}%`}},
                 ],
-                ...j
+                ...f
             }
         }
         const config2 = {
@@ -75,23 +75,34 @@ controller.post = async (req, res, next) => {
         
         const email = req.user.data.email;
         const data = await anggota.findOne({ where: {email} });
-        const anggota_id = parseInt(data.dataValues.id);
-        const conf = {
-            where: {
-                [Op.and]: [
-                    {anggota_id},
-                    {is_done: 0},
-                    {jenis_simpanan_id: 4}
-                ]
-            }
-        }
-        const check = await simpan.findAll(conf);
-        if(check.length >= 1){
+
+        // error if anggota belum terdaftar
+        if(!data) {
             if(req.file?.filename) await dltFile(req.file.filename);
-            throw {statusCode: 400, message: 'selesaikan dulu pinjaman sebelumnya'}
+            throw {statusCode: 400, message: 'Anggota tidak ditemukan silahkan daftar terlebih dahulu'}
         }
 
-        // console.log(req.file?.filename);
+        const jenis_simpanan_id = parseInt(req.body.jenis_simpanan_id) || 4;
+        const anggota_id = parseInt(data.dataValues.id);
+
+        if(jenis_simpanan_id === 4){
+            if(!req.body?.total) throw { statusCode: 400, message: ' [total.value is undefiend] Masukan total simpanan berjangka' };
+            const conf = {
+                where: {
+                    [Op.and]: [
+                        {anggota_id},
+                        {is_done: 0},
+                        {jenis_simpanan_id: 4}
+                    ]
+                }
+            }
+            const check = await simpan.findAll(conf);
+                if(check.length >= 1){
+                    if(req.file?.filename) await dltFile(req.file.filename);
+                    throw {statusCode: 400, message: 'selesaikan dulu pinjaman sebelumnya'}
+                }
+        }
+
         if(!data){
             if(req.file?.filename) await dltFile(req.file.filename);
             throw {statusCode: 400, message: 'anggota tidak ditemukan, silahkan daftar terlebih dahulu'}
@@ -107,7 +118,7 @@ controller.post = async (req, res, next) => {
             anggota_id,
             jumlah: parseFloat(req.body.jumlah),
             total: parseFloat(req.body.total) || null,
-            jenis_simpanan_id: req.body.jenis_simpanan_id || 4,
+            jenis_simpanan_id,
             is_done: req.body.is_done || 0,
             created_by: User,
             updated_by: User
@@ -179,6 +190,7 @@ controller.edit = async (req, res, next) => {
             transaction, 
             individualHooks: true
         };
+
         const [updatedRows] = await simpan.update(reqData, conf)
 
         const photo = {
@@ -192,7 +204,7 @@ controller.edit = async (req, res, next) => {
 
         if(!updatedRows){
             if(req.file?.file_name) await dltFile(req.file.filename);
-            throw {statusCode: 400, message: 'Gagal membuat simpanan baru'}
+            throw {statusCode: 400, message: 'Gagal mengupdate simpanan baru'}
         }
 
         await transaction.commit();

@@ -42,10 +42,6 @@ module.exports = (sequelize, DataTypes) => {
       validate: {
         notEmpty: true,
         notNull: true,
-        // len: {
-        //   msg: 'Masukan maksimal 13 digit angka',
-        //   args: [1,13]
-        // }
       }
     },
     nama: {
@@ -64,7 +60,7 @@ module.exports = (sequelize, DataTypes) => {
         notEmpty: true,
         notNull: true,
         len: {
-          msg: 'Masukan maksimal 16 digit angka',
+          msg: 'Masukan maksimal 16 digit angka no_ktp',
           args: [1,16]
         }
       }
@@ -76,7 +72,7 @@ module.exports = (sequelize, DataTypes) => {
         notEmpty: true,
         notNull: true,
         len: {
-          msg: 'Masukan maksimal 13 digit angka',
+          msg: 'Masukan maksimal 13 digit angka no_hp',
           args: [1,13]
         }
       }

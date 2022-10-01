@@ -68,6 +68,13 @@ controller.post = async (req, res, next) => {
 
         const email = req.user.data.email;
         const data = await anggota.findOne({ where: {email} });
+
+        // error if anggota belum terdaftar
+        if(!data) {
+            if(req.file?.filename) await dltFile(req.file.filename);
+            throw {statusCode: 400, message: 'Anggota tidak ditemukan silahkan daftar terlebih dahulu'}
+        }
+
         const anggota_id = parseInt(data.dataValues.id);
         const conf = {
             where: {

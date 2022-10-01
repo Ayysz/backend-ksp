@@ -102,7 +102,7 @@ controller.totalSaldo = async (req, res, next) => {
 
         const data = {
             anggota_id: req.query.id ?? '',
-            saldo: parseFloat(saldoSimpanan.jumlah) + parseFloat(((saldoPengembalian?.jumlah ?? 0) - (saldoPenarikan?.jumlah ?? 0)) ?? 0)
+            saldo: parseFloat(saldoSimpanan?.jumlah ?? 0) - parseFloat((saldoPenarikan?.jumlah ?? 0))
         }
         
         if( !saldoSimpanan ??

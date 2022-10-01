@@ -28,10 +28,10 @@ module.exports = {
      const password = 'test1234'
      const data = [];
 
-     for(let i = 0; i < email.length; i++){
+     for(let i = 0; i < 4; i++){
       //  const hash = await bycrypt.hash(faker.internet.password(), 10);
        const reqData = {
-         email: `test${i+1}@gmail.com`,
+         email: `test${i+1}@test.com`,
          password: password,
          role_id: i+1
        }

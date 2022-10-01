@@ -10,7 +10,7 @@ router.route('/')
     .post(authenticate, Authorization.staffOnly, controller.permohonan.post);
 
 router.route('/:id')
-    .put(authenticate, Authorization.staffOnly, controller.permohonan.edit)
+    .put(authenticate, Authorization.leaderOnly, controller.permohonan.edit)
     .delete(authenticate, Authorization.adminOnly, controller.permohonan.destroy);
 
 router.use('/permohonan', router);
