@@ -15,23 +15,24 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
-     const email = [
-      'admin@gmail.com',
-      'test@gmail.com',
-      'dummy@gmail.com',
-     ];
-     const password = [
-      'admin123',
-      'test123',
-      'dummyyum13',
-     ];
+    //  const email = [
+    //   'admin@gmail.com',
+    //   'test@gmail.com',
+    //   'dummy@gmail.com',
+    //  ];
+    //  const password = [
+    //   'admin123',
+    //   'test123',
+    //   'dummyyum13',
+    //  ];
+     const password = 'test1234'
      const data = [];
 
      for(let i = 0; i < email.length; i++){
       //  const hash = await bycrypt.hash(faker.internet.password(), 10);
        const reqData = {
-         email: email[i],
-         password: password[i],
+         email: `test${i+1}@gmail.com`,
+         password: password,
          role_id: i+1
        }
        data.push(reqData);
