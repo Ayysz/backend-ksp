@@ -128,6 +128,11 @@ controller.post = async (req, res, next) => {
       if(is_done) await pinjam.update({is_done},{where: {id:reqData.pinjaman_id}, transaction})
     }
 
+    // jika jenis transaksi adalah penarikan
+    if(reqData.jenis_transaksi_id === 1){
+      // check saldo simpanan 
+    }
+
     const result = await transaksi.create(reqData, { transaction });
 
     // reqData for photo

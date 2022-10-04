@@ -18,15 +18,43 @@ controller.getAll = async (req, res, next) => {
     try {
         const page = parseInt(req.query.page) || 0;
         const limit = parseInt(req.query.limit) || 10;
-        const search = req.query.search || "";
         const offside = limit * page;
+        const cond = {
+            isd : {
+                0: {
+                    is_done: 0
+                },
+                1: {
+                    is_done: 1
+                }
+            },
+            isa : {
+                0: {
+                    is_approve: 0
+                },
+                1: {
+                    is_approve: 1
+                }
+            },
+            active: {
+                0: {
+                    is_active: 0
+                },
+                1: {
+                    is_active: 1
+                }
+            }
+        }
+
 
         const config1 = {
             where: {
                 [Op.or]: [
-                    {anggota_id: {[Op.like]: `%${search}%`}},
+                    {anggota_id: {[Op.like]: `%${req.query?.search ?? ''}%`}},
                 ],
-                is_done: 1,
+                ...cond.isd[parseInt(req.query?.isD)],
+                ...cond.isa[parseInt(req.query?.isA)],
+                ...cond.active[parseInt(req.query?.active ?? 1)],
             }
         }
         const config2 = {

@@ -19,11 +19,30 @@ controller.getAll = async (req, res, next) => {
         const limit = parseInt(req.query.limit) || 10;
         const search = req.query.search || "";
         const offside = limit * page;
-        let f = {};
+        let filter = {};
 
-        if(req.query?.filter){
-            f = {
+        if(parseInt(req.query?.filter) <= 4){
+            filter = {
                 jenis_simpanan_id: req.query.filter
+            }
+        }
+
+        const cond = {
+            isd : {
+                0: {
+                    is_done: 0
+                },
+                1: {
+                    is_done: 1
+                }
+            },
+            active: {
+                0: {
+                    is_active: 0
+                },
+                1: {
+                    is_active: 1
+                }
             }
         }
 
@@ -32,7 +51,9 @@ controller.getAll = async (req, res, next) => {
                 [Op.or]: [
                     {anggota_id: {[Op.like]: `%${search}%`}},
                 ],
-                ...f
+                ...filter,
+                ...cond.isd[parseInt(req.query?.isD)],
+                ...cond.active[parseInt(req.query?.active ?? 1)],
             }
         }
         const config2 = {
@@ -85,6 +106,7 @@ controller.post = async (req, res, next) => {
         const jenis_simpanan_id = parseInt(req.body.jenis_simpanan_id) || 4;
         const anggota_id = parseInt(data.dataValues.id);
 
+        // jika jenis simpanan adalah berjangka
         if(jenis_simpanan_id === 4){
             if(!req.body?.total) throw { statusCode: 400, message: ' [total.value is undefiend] Masukan total simpanan berjangka' };
             const conf = {
@@ -103,9 +125,9 @@ controller.post = async (req, res, next) => {
                 }
         }
 
-        if(!data){
-            if(req.file?.filename) await dltFile(req.file.filename);
-            throw {statusCode: 400, message: 'anggota tidak ditemukan, silahkan daftar terlebih dahulu'}
+        // jika jenis simpanan sama dengan pokok
+        if(jenis_simpanan_id === 1){
+
         }
 
         const User = data.dataValues.nama;

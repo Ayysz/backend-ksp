@@ -20,11 +20,41 @@ controller.getAll = async (req, res, next) => {
         const search = req.query.search || "";
         const offside = limit * page;
 
+        const cond = {
+            isa : {
+                0: {
+                    is_approve: 0
+                },
+                1: {
+                    is_approve: 1
+                }
+            },
+            isw: {
+                0: {
+                    is_waiting: 0
+                },
+                1: {
+                    is_waiting: 1
+                }
+            },
+            active: {
+                0: {
+                    is_active: 0
+                },
+                1: {
+                    is_active: 1
+                }
+            }
+        }
+
         const config1 = {
             where: {
                 [Op.or]: [
                     {pinjam_id: {[Op.like]: `%${search}%`}},
-                ]
+                ],
+                ...cond.isw[parseInt(req.query?.isW)],
+                ...cond.isa[parseInt(req.query?.isA)],
+                ...cond.active[parseInt(req.query?.active ?? 1)],
             }
         }
         const config2 = {
