@@ -78,6 +78,14 @@ module.exports = (sequelize, DataTypes) => {
 
   });
 
+  t_simpan.beforeCreate(async (t_simpan, opt) => {
+    let stat = 0;
+    const {total, jumlah} = t_simpan;
+    if(total === jumlah ) stat = 1;
+
+    return t_simpan.is_done = stat;
+  })
+
   // add data values before update
   t_simpan.beforeUpdate(async (t_simpan, opt) => {
     let stat = 0;

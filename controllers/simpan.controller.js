@@ -146,6 +146,8 @@ controller.post = async (req, res, next) => {
             updated_by: User
         };
 
+        if(jenis_simpanan_id === 3) reqData.total = null;
+
         const result = await simpan.create(reqData, {transaction});
 
         const photo = {

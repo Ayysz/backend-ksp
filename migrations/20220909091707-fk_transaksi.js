@@ -59,6 +59,19 @@ module.exports = {
         field: 'id'
       }
     })
+    
+    // add foreign key column jenis_simpan_id table t_transaksi
+    await queryInterface.addConstraint('t_transaksi', {
+      fields: ['jenis_simpanan_id'],
+      type: 'FOREIGN KEY',
+      name: 'FK_jenis_simpan_transaksi',
+      references: {
+        table: 'm_jenis_simpanan',
+        field: 'id'
+      },
+      onUpdate: 'CASCADE',
+      onDelete: 'CASCADE'
+    });
   },
 
   async down (queryInterface, Sequelize) {

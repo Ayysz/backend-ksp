@@ -9,6 +9,7 @@ const transaksi = Models.t_transaksi;
 const attachment = Models.t_attachment;
 const anggota = Models.m_anggota;
 const pinjam = Models.t_pinjam;
+const simpan = Models.t_simpan;
 const controller = {};
 const { dltFile } = require("../helper/fileDelete");
 const { number } = require("../helper/helper");
@@ -103,7 +104,8 @@ controller.post = async (req, res, next) => {
     const reqData = {
       no_transaksi,
       anggota_id: parseInt(data.dataValues.id),
-      pinjaman_id: req.body.pinjaman_id || null,
+      pinjaman_id: parseInt(req.body.pinjaman_id) || null,
+      jenis_simpanan_id: parseInt(req.body.jenis_simpanan_id) || null,
       jenis_transaksi_id: parseInt(req.body.jenis_transaksi_id),
       bank_id: parseInt(req.body.bank_id),
       tanggal_transaksi: d.toLocaleDateString("en-CA"),
@@ -114,8 +116,10 @@ controller.post = async (req, res, next) => {
 
     // jika jenis transaksi adalah pengembalian
     if(reqData.jenis_transaksi_id === 2){
+      reqData.jenis_simpanan_id = null;
       // check is_approve true to next payment
       const isA = await pinjam.findOne({where: {id:reqData.pinjaman_id}})
+      console.log(isA.is_approve);
       if(isA) if(!isA.dataValues.is_approve) throw {statusCode: 400, message: `Belum bisa melakukan transaksi pinjaman id ${reqData.pinjaman_id} belum di setujui`};
 
       const sumJumlah = parseFloat( await transaksi.sum('jumlah', {where: {pinjaman_id: reqData.pinjaman_id}}) ) + jumlah;
@@ -130,7 +134,21 @@ controller.post = async (req, res, next) => {
 
     // jika jenis transaksi adalah penarikan
     if(reqData.jenis_transaksi_id === 1){
+      reqData.pinjaman_id = null;
+      
       // check saldo simpanan 
+      const saldo = await simpan.sum('jumlah', {
+        where: {
+          jenis_simpanan_id: reqData.jenis_simpanan_id,
+          anggota_id: reqData.anggota_id,
+          is_done: 1,
+        }
+      });
+
+      if (reqData.jumlah > saldo){
+        throw {statusCode: 400, message: 'Saldo kamu tidak mencukupi untuk melakukan penarikan', payload:saldo}
+      }
+
     }
 
     const result = await transaksi.create(reqData, { transaction });

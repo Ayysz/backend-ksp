@@ -26,7 +26,7 @@ module.exports = {
     await queryInterface.addConstraint('t_simpan', {
       fields: ['jenis_simpanan_id'],
       type: 'FOREIGN KEY',
-      name: 'FK_jenis_simpan',
+      name: 'FK_jenis_simpan_simpan',
       references: {
         table: 'm_jenis_simpanan',
         field: 'id'

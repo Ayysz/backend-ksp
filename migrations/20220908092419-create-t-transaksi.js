@@ -14,6 +14,9 @@ module.exports = {
       pinjaman_id: {
         type: Sequelize.INTEGER
       },
+      jenis_simpanan_id: {
+        type: Sequelize.INTEGER
+      },
       anggota_id: {
         type: Sequelize.INTEGER
       },

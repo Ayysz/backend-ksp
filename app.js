@@ -37,12 +37,14 @@ app.use('/src', express.static('src'));
 app.use((err, req, res, next) => {
     err.statusCode = err.statusCode || 500;
     err.message = err.message || 'Internal server error';
+    err.payload = err.payload || 0;
     console.log(`Error code : ${err.statusCode}\nError message: ${err.message}
     `);
     return res.status(err.statusCode)
         .json({
             status: 'Error cui',
-            message: err.message
+            message: err.message,
+            data: err.payload
     });
 });
 

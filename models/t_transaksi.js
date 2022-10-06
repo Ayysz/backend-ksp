@@ -24,6 +24,10 @@ module.exports = (sequelize, DataTypes) => {
       t_transaksi.belongsTo(models.t_pinjam, {
         foreignKey: 'pinjaman_id'
       })
+      t_transaksi.hasOne(models.m_jenis_simpanan, {
+        foreignKey: 'jenis_simpanan_id',
+        hooks: true,
+      });
     }
   }
   t_transaksi.init({
@@ -39,6 +43,13 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       references: {
         model: 't_pinjam',
+        key: 'id'
+      }
+    },
+    jenis_simpanan_id: {
+      type:DataTypes.INTEGER,
+      references: {
+        model: 'm_jenis_simpanan',
         key: 'id'
       }
     },
