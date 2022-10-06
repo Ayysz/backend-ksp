@@ -69,23 +69,6 @@ module.exports = (sequelize, DataTypes) => {
     freezeTableName: true,
   });
 
-  // create log_simpan after input
-  t_simpan.afterCreate(async (t_simpan, opt) => {
-    console.log('Nambahin log simpanan nich')
-  });
-
-  t_simpan.afterUpdate(async (t_simpan, opt) => {
-
-  });
-
-  t_simpan.beforeCreate(async (t_simpan, opt) => {
-    let stat = 0;
-    const {total, jumlah} = t_simpan;
-    if(total === jumlah ) stat = 1;
-
-    return t_simpan.is_done = stat;
-  })
-
   // add data values before update
   t_simpan.beforeUpdate(async (t_simpan, opt) => {
     let stat = 0;

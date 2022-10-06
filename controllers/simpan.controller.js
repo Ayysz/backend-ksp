@@ -127,7 +127,43 @@ controller.post = async (req, res, next) => {
 
         // jika jenis simpanan sama dengan pokok
         if(jenis_simpanan_id === 1){
+            const data = await simpan.findOne({
+                where: {
+                    jenis_simpanan_id,
+                    anggota_id,
+                    is_done: 1,
+                    is_active: 1,
+                }
+            })
 
+            if(data) throw {statusCode: 400, message: 'Simpanan pokok kamu telah terpenuhi'}
+        }
+
+        // jika jenis simpanan sama dengan wajib
+        if(jenis_simpanan_id === 2){
+            const now = new Date();
+
+            const firstDay = new Date(now.getFullYear(), now.getMonth(), 1).toLocaleDateString('en-CA');
+            const lastDay = new Date(now.getFullYear(), now.getMonth()+1, 0).toLocaleDateString('en-CA');
+    
+            console.log(firstDay);
+            console.log(lastDay);
+    
+            const data = await simpan.findOne({
+                where: {
+                    tanggal_simpan: {[Op.between]: [
+                        firstDay,
+                        lastDay
+                    ]},
+                    jenis_simpanan_id,
+                    anggota_id,
+                    is_done:1,
+                    is_active: 1,
+                },
+                raw: true
+            })
+
+            if(data) throw {statusCode: 400, message: 'Kamu telah memenuhi simpanan pokok bulan ini'}
         }
 
         const User = data.dataValues.nama;
