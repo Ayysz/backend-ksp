@@ -59,6 +59,14 @@ controller.getAll = async (req, res, next) => {
         }
         const config2 = {
             ...config1,
+            include: {
+                model: pinjam,
+                attributes: [
+                    'jumlah',
+                    'tujuan',
+                    'tanggal_pinjam'
+                ]
+            },
             offset: offside,
             limit,
             order: [ ['id', 'ASC'] ],

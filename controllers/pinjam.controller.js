@@ -87,6 +87,25 @@ controller.getAll = async (req, res, next) => {
     }
 };
 
+// get info pinjaman
+controller.getById = async (req, res, next) => {
+    try {
+        
+        const {id} = req.params
+
+        const find = await pinjam.findOne({where: {id, is_active: 1, is_approve: 0}});
+
+        return res.status(200).json({
+            status: 'Success',
+            message: 'Data berhasil ditemukan',
+            data: find,
+        })
+
+    } catch (e) {
+        next(e)
+    }
+}
+
 // post data pinjaman
 controller.post = async (req, res, next) => {
     let transaction;
@@ -100,7 +119,7 @@ controller.post = async (req, res, next) => {
         // error if anggota belum terdaftar
         if(!data) {
             if(req.file?.filename) await dltFile(req.file.filename);
-            throw {statusCode: 400, message: 'Anggota tidak ditemukan silahkan daftar terlebih dahulu'}
+            throw {statusCode: 400, message: 'Pegawai tidak ditemukan silahkan daftar terlebih dahulu'}
         }
 
         const anggota_id = parseInt(data.dataValues.id);

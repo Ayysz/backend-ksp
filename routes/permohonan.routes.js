@@ -8,6 +8,7 @@ const { authenticate, Authorization } = require('./login.routes');
 router.route('/')
     .get(authenticate, Authorization.staffOnly, controller.permohonan.getAll)
     .post(authenticate, Authorization.staffOnly, controller.permohonan.post);
+router.get('/pinjaman/:id', authenticate, Authorization.staffOnly, controller.pinjam.getById);
 
 router.route('/:id')
     .put(authenticate, Authorization.leaderOnly, controller.permohonan.edit)
