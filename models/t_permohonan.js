@@ -169,7 +169,7 @@ const pinjamanApprove = async (m, id) => {
   try {
     const [updatedRows] = await m.update({is_approve: 1},{where:{id}});
   } catch (e) {
-    next(e)
+    console.log(e);
   }
 }
 
