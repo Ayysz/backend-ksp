@@ -109,7 +109,10 @@ controller.post = async (req, res, next) => {
         const email = req.user.data.email;
         const data = await pegawai.findOne({ where: {email} });
 
-        if(!data) throw {statusCode: 400, message: 'anggota tidak ditemukan, silahkan daftar terlebih dahulu'}
+        console.log(req.user.data);
+        console.log(email);
+
+        if(!data) throw {statusCode: 400, message: 'pegawai tidak ditemukan, silahkan daftar terlebih dahulu'}
         
         const {nama, id} = data.dataValues;
         const cond = checker(parseInt(req.body.cond));
@@ -126,7 +129,7 @@ controller.post = async (req, res, next) => {
         };
 
         const result = await permohonan.create(reqData);
-
+        
         if(!result) throw {statusCode: 400, message: 'Gagal membuat permohonan baru'}
 
         return res.status(201).json({

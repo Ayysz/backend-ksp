@@ -43,6 +43,7 @@ controller.getAll = async (req, res, next) => {
                         'is_active'
                     ]
                 },
+                // right: true,
             }
         }
 
