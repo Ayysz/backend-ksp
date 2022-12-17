@@ -184,7 +184,7 @@ controller.destroyAcc = async (req, res, next) => {
         // throw new error
         throw {
                 statusCode: 400, 
-                message: 'Gagal delete akun'
+                message: `Gagal delete akun dengan email ${req.body.email}`
             };
 
     } catch (e) {

@@ -24,7 +24,7 @@ router.get('/protected', authenticate, controller.auth.protected);
 router.get('/haloadmin', authenticate, Authorization.adminOnly, haloAdmin);
 router.get('/halostaff', authenticate, Authorization.staffOnly, haloStaff);
 router.get('/users_data', authenticate, Authorization.adminOnly, controller.auth.getAll);
-router.delete('/users', authenticate, Authorization.adminOnly, controller.auth.destroyAcc);
+router.delete('/user', authenticate, Authorization.adminOnly, controller.auth.destroyAcc);
 
 // route untuk logout
 router.get('/logout', authenticate, controller.auth.logOut);
