@@ -169,6 +169,29 @@ controller.protected = (req, res, next) => {
     }
 };
 
+// delete akun
+controller.destroyAcc = async (req, res, next) => {
+    try {
+        
+        const result = !!await user.destroy({where: {email: req.body.email}});
+        
+        if(result) 
+            return res.status(200).json({
+                status: 'Success',
+                message: `Berhasil delete akun dengan email ${req.body.email}`
+            });
+        
+        // throw new error
+        throw {
+                statusCode: 400, 
+                message: 'Gagal delete akun'
+            };
+
+    } catch (e) {
+        next(e)
+    }
+}
+
 // getAll data akun
 controller.getAll = async (req, res, next) => {
     try {
