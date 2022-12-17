@@ -22,6 +22,10 @@ const checkStaff = (check) => {
       1: {
         is_waiting: 0,
         is_approve: 1
+      },
+      2: {
+        is_waiting: 0,
+        is_approve: 0
       }
     }
     // console.log(`staff bukan? ${check}`)
