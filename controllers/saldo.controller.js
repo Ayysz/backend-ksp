@@ -67,11 +67,12 @@ controller.saldoSukarela = async (req, res, next) => {
             },
             raw: true,
         })
-
+        
         if(!saldo) throw {statusCode: 400, message: 'Data saldo sukarela tidak ditemukan'}
 
         const conf = `WHERE anggota_id = ${req.params.id}`
-        const [penarikan] = await query('penarikanSukarela', conf)
+        const [penarikan] = await query('penarikansukarela', conf)
+        console.log(penarikan);
         console.log(penarikan.jumlah);
         const data = saldo - penarikan.jumlah;
         console.log(saldo);

@@ -18,7 +18,7 @@ router.post('/login', controller.auth.checkUser, controller.auth.login);
 
 // Authorization
 router.get('/userInfo', authenticate, Authorization.memberOnly, controller.auth.info);
-router.get('/userInfo/pegawai', authenticate, Authorization.memberOnly, controller.pegawai.getAcc);
+router.get('/userInfo/pegawai', authenticate, Authorization.memberOnly, controller.pegawai.info);
 router.get('/userData', authenticate, Authorization.adminOnly, controller.auth.getAll);
 router.get('/protected', authenticate, controller.auth.protected);
 router.get('/haloadmin', authenticate, Authorization.adminOnly, haloAdmin);
