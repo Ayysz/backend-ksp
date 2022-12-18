@@ -80,7 +80,7 @@ const saldoWajib = async (params) => {
     if(!saldo) throw {statusCode: 400, message: 'Data saldo wajib tidak ditemukan'}
 
     console.log(saldo);
-    return data = saldo - penarikan.jumlah;
+    return saldo;
 }
 
 // melihat saldo 
