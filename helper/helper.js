@@ -8,18 +8,14 @@ const condition = {
         is_waiting: true,
         is_approve: false,
     },
-    2: { //disetujui pinmpinan
+    2: { //disetujui pimpinan
         is_waiting: false,
-        is_approve: false,
+        is_approve: true,
     },
     3: { //ditolak pimpinan
-        is_waiting: true,
-        is_approve: true,
-    },
-    4: { //ditinjau pimpinan
         is_waiting: false,
-        is_approve: true,
-    },
+        is_approve: false,
+    }
 };
 
 // global error respone with status code 400
