@@ -4,12 +4,11 @@ const router = require('express').Router();
 const controller = require('../controllers');
 const { authenticate, Authorization } = require('./login.routes');
 
-router.get('/penarikan/sukarela', authenticate, Authorization.memberOnly, controller.saldo.penarikanSukarela);
-router.get('/penarikan/berjangka', authenticate, Authorization.memberOnly ,controller.saldo.penarikanBerjangka);
+router.get('/penarikan', authenticate, Authorization.memberOnly, controller.saldo.penarikan)
 router.get('/pengembalian', authenticate, Authorization.memberOnly,controller.saldo.pengembalian);
-router.get('/simpanan/berjangka', authenticate, Authorization.memberOnly, controller.saldo.saldoBerjangka);
+router.get('/simpanan', authenticate, Authorization.memberOnly, controller.saldo.saldo);
 router.get('/total', authenticate, Authorization.memberOnly, controller.saldo.totalSaldo);
-router.get('/simpanan/sukarela/:id', authenticate, Authorization.memberOnly, controller.saldo.saldoSukarela);
+
 
 router.use('/saldo', router);
 

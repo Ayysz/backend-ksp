@@ -17,70 +17,98 @@ const query = async (models, param) => {
     return await sequelize.query(`SELECT * FROM ${models} ${param}`, { type: QueryTypes.SELECT });
 }
 
-controller.saldoBerjangka = async (req, res, next) => {
-    try {
-        
-        let param = '';
-        if(req.query?.id){
-            param = `WHERE anggota_id = ${req.query.id}`
-        }
+// melihat saldo berjangka
+const saldoBerjangka = async (params) => {
 
-        const saldoSimpan = await query('saldo_simpanan', param)
+    const saldoSimpanan = await query('saldo_simpanan', params)
 
-        if(saldoSimpan.length === 0) throw {statusCode: 400, message: 'Data saldo tidak ditemukan'}
-        
-        const saldoPenarikan = await query('penarikanBerjangka', param)
+    if(saldoSimpanan.length === 0) throw {statusCode: 400, message: 'Data saldo tidak ditemukan'}
 
-        if(saldoPenarikan.length === 0) throw {statusCode: 400, message: 'Data saldo tidak ditemukan'}
+    const saldoPenarikan = await query('penarikanBerjangka', params)
 
-        const data = parseFloat(saldoSimpan[0].jumlah - saldoPenarikan[0].jumlah)
+    if(saldoPenarikan.length === 0) throw {statusCode: 400, message: 'Data saldo tidak ditemukan'}
 
-        return res.status(200).json({
-            status: 'Success',
-            message: 'Data penarikan',
-            data
-        })
+    return parseFloat(saldoSimpanan[0].jumlah - saldoPenarikan[0].jumlah)
 
-    } catch (e) {
-        next(e)
+}
+
+// melihat saldo Sukarela
+const saldoSukarela = async (params) => {
+    let param = {
+        is_active: 1,
+        jenis_simpanan_id : 3,
+        anggota_id: parseInt(params)
     }
-};
 
-// melihat saldo simpanan sukarela
-controller.saldoSukarela = async (req, res, next) => {
+    const {saldo} = await simpan.findOne({
+        attributes: [
+            [sequelize.fn('sum', sequelize.col('jumlah')), 'saldo']
+        ],
+        where: {
+            ...param
+        },
+        raw: true,
+    })
+    
+    if(!saldo) throw {statusCode: 400, message: 'Data saldo sukarela tidak ditemukan'}
+
+    const conf = `WHERE anggota_id = ${params}`
+    const [penarikan] = await query('penarikansukarela', conf)
+    console.log(penarikan);
+    console.log(penarikan.jumlah);
+    console.log(saldo);
+    return data = saldo - penarikan.jumlah;
+}
+
+const saldoWajib = async (params) => {
+    let param = {
+        is_active: 1,
+        jenis_simpanan_id : 2,
+        anggota_id: parseInt(params)
+    }
+
+    const {saldo} = await simpan.findOne({
+        attributes: [
+            [sequelize.fn('sum', sequelize.col('jumlah')), 'saldo']
+        ],
+        where: {
+            ...param
+        },
+        raw: true,
+    })
+    
+    if(!saldo) throw {statusCode: 400, message: 'Data saldo wajib tidak ditemukan'}
+
+    console.log(saldo);
+    return data = saldo - penarikan.jumlah;
+}
+
+// melihat saldo 
+controller.saldo = async (req, res, next) => {
     try {
-        
         let param = '';
-        if(!req?.params.id) throw {statusCode: 400, message: 'Silahkan masukan id'}
-        param = {
-            anggota_id: parseInt(req.params.id)
-        }
+        let data = '';
 
-        const {saldo} = await simpan.findOne({
-            attributes: [
-                [sequelize.fn('sum', sequelize.col('jumlah')), 'saldo']
-            ],
-            where: {
-                jenis_simpanan_id: 3,
-                is_active: 1,
-                ...param
-            },
-            raw: true,
-        })
-        
-        if(!saldo) throw {statusCode: 400, message: 'Data saldo sukarela tidak ditemukan'}
 
-        const conf = `WHERE anggota_id = ${req.params.id}`
-        const [penarikan] = await query('penarikansukarela', conf)
-        console.log(penarikan);
-        console.log(penarikan.jumlah);
-        const data = saldo - penarikan.jumlah;
-        console.log(saldo);
+        if (!req.query?.id) throw {statusCode: 400, message: 'Masukan Id'}
+        param = `WHERE anggota_id = ${req.query.id}`
+
+        if (!req.query?.type) throw {statusCode: 400, message: 'Masukan jenis saldo'}
+
+        // untuk melihat jenis saldo berjangka
+        if((req.query?.type).toUpperCase() === 'B') data = await saldoBerjangka(param)
+
+
+        // untuk melihat jenis saldo sukarela
+        if((req.query?.type).toUpperCase() === 'S') data = await saldoSukarela(req.query.id)
+
+
+        // untuk melihat jenis saldo wajib
+        if((req.query?.type).toUpperCase() === 'W') data = await saldoWajib(req.query.id)
 
         return res.status(200).json({
             status: 'Success',
-            message: 'Data saldo sukarela ditemukan',
-            ...param,
+            message: 'Data saldo',
             data
         })
 
@@ -114,15 +142,25 @@ controller.pengembalian = async (req, res, next) => {
     }
 };
 
-controller.penarikanBerjangka = async (req, res, next) => {
+/** 
+ * get daata penarikan by
+ * id 
+ * tyoe penarikan (B, S)
+ * */ 
+controller.penarikan = async (req, res, next) => {
     try {
         
         let param = '';
+        let data = '';
         if(req.query?.id){
             param = `WHERE anggota_id = ${req.query.id}`
         }
 
-        const data = await query('penarikanBerjangka', param)
+        if(!req.query?.type) throw {statusCode: 400, message: 'Masukan jenis penarikan'}
+        
+        if ((req.query?.type).toUpperCase() === "S")  await query('penarikanSukarela', param)
+        if ((req.query?.type).toUpperCase() === "B") data = await query('penarikanBerjangka', param)
+
 
         if(data.length === 0) throw {statusCode: 400, message: 'Data saldo tidak ditemukan'}
 
@@ -137,30 +175,10 @@ controller.penarikanBerjangka = async (req, res, next) => {
     }
 };
 
-controller.penarikanSukarela = async (req, res, next) => {
-    try {
-        
-        let param = '';
-        if(req.query?.id){
-            param = `WHERE anggota_id = ${req.query.id}`
-        }
-
-        const data = await query('penarikanSukarela', param)
-
-        if(data.length === 0) throw {statusCode: 400, message: 'Data saldo tidak ditemukan'}
-
-        console.log(data);
-        return res.status(200).json({
-            status: 'Success',
-            message: 'Data penarikan',
-            data
-        })
-
-    } catch (e) {
-        next(e)
-    }
-};
-
+/**
+ * get data total saldo
+ * saldoSimpanan - ()
+ * */ 
 controller.totalSaldo = async (req, res, next) => {
     try {
         
