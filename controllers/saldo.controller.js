@@ -25,10 +25,11 @@ const saldoBerjangka = async (params) => {
     if(saldoSimpanan.length === 0) throw {statusCode: 400, message: 'Data saldo tidak ditemukan'}
 
     const saldoPenarikan = await query('penarikanBerjangka', params)
-
-    if(saldoPenarikan.length === 0) throw {statusCode: 400, message: 'Data saldo tidak ditemukan'}
-
-    return parseFloat(saldoSimpanan[0].jumlah - saldoPenarikan[0].jumlah)
+    
+    if (saldoPenarikan.length !== 0) {
+        return parseFloat(saldoSimpanan[0].jumlah - saldoPenarikan[0].jumlah)
+    }
+    return parseFloat(saldoSimpanan[0].jumlah)
 
 }
 
@@ -51,13 +52,18 @@ const saldoSukarela = async (params) => {
     })
     
     if(!saldo) throw {statusCode: 400, message: 'Data saldo sukarela tidak ditemukan'}
-
+    console.log(params);
+    console.log(saldo);
     const conf = `WHERE anggota_id = ${params}`
     const [penarikan] = await query('penarikanSukarela', conf)
-    console.log(penarikan);
-    console.log(penarikan.jumlah);
-    console.log(saldo);
-    return data = saldo - penarikan.jumlah;
+    if(penarikan) {
+        console.log(penarikan);
+        console.log(penarikan.jumlah);
+        console.log('saldo dikurang penarikan cui');
+        return saldo - penarikan.jumlah;
+    }
+    console.log('saldo doang cui');
+    return saldo;
 }
 
 const saldoWajib = async (params) => {
