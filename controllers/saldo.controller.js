@@ -53,7 +53,7 @@ const saldoSukarela = async (params) => {
     if(!saldo) throw {statusCode: 400, message: 'Data saldo sukarela tidak ditemukan'}
 
     const conf = `WHERE anggota_id = ${params}`
-    const [penarikan] = await query('penarikansukarela', conf)
+    const [penarikan] = await query('penarikanSukarela', conf)
     console.log(penarikan);
     console.log(penarikan.jumlah);
     console.log(saldo);
