@@ -157,6 +157,50 @@ controller.logOut = async (req, res, next) => {
     }
 };
 
+controller.getStaff = async (req, res, next) => {
+    try {
+
+        const page = parseInt(req.query.page) || 0;
+        const limit = parseInt(req.query.limit) || 10;
+        const search = req.query.search || '';
+        const offset = limit * page;
+
+        const config1 = {
+            where: {
+                role_id: {[Op.gte]: 3},
+            }
+        }
+        const config2 = {
+            ...config1,
+            offset,
+            limit
+        }
+
+        const totalRows = await user.count(config1);
+        const totalPage = Math.ceil(totalRows / limit);
+
+        const result = await user.findAll(config2);
+
+        if(!result){
+            throw {statusCode: 400, message: 'Data jabatan tidak ditemukan'}
+        }
+        return res.status(200)
+            .json({
+                status: 'Success',
+                message:'Data akun pegawai ditemukan',
+                page,
+                limit,
+                totalRows,
+                totalPage,
+                data: result
+            })
+        
+
+    } catch (e) {
+        next(e)
+    }
+}
+
 // untuk tes route apakah cookie bisa atau tidak
 controller.protected = (req, res, next) => {
     try {

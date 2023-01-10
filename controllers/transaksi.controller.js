@@ -155,12 +155,13 @@ controller.post = async (req, res, next) => {
 
     // reqData for photo
     const photo = {
-      file_name: req.file.filename,
+      file_name: req.file.filename || 'null',
       refrence_table: "transaksi",
       refrence_id: result.dataValues.id,
       anggota_id: reqData.anggota_id,
     };
-    const savePhoto = await attachment.create(photo, { transaction });
+    // savePhoto
+    await attachment.create(photo, { transaction });
 
     if (!result) {
       if (req.file?.filename) await dltFile(req.file.filename);
